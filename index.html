@@ -590,12 +590,14 @@ function setupTouchDrag(item, di, placeId) {
   const handle = item.querySelector('.drag-handle');
   if (!handle) return;
 
-  let startY, startX, clone, isDragging = false;
+  let startClientY, startClientX, startScrollY, clone, isDragging = false;
 
   handle.addEventListener('touchstart', e => {
     e.stopPropagation();
     const t = e.touches[0];
-    startY = t.clientY; startX = t.clientX;
+    startClientY = t.clientY;
+    startClientX = t.clientX;
+    startScrollY = window.scrollY;
     dragSrc = placeId; dragSrcDay = di;
     isDragging = false;
   }, { passive: true });
@@ -603,17 +605,22 @@ function setupTouchDrag(item, di, placeId) {
   handle.addEventListener('touchmove', e => {
     e.preventDefault();
     const t = e.touches[0];
-    const dy = t.clientY - startY;
-    const dx = t.clientX - startX;
+    // 현재 스크롤 위치 반영한 실제 이동 거리
+    const dy = t.clientY - startClientY;
+    const dx = t.clientX - startClientX;
 
     if (!isDragging && (Math.abs(dy) > 4 || Math.abs(dx) > 4)) {
       isDragging = true;
+      const rect = item.getBoundingClientRect();
       clone = item.cloneNode(true);
       clone.style.cssText = `
-        position:fixed; left:${item.getBoundingClientRect().left}px;
-        top:${item.getBoundingClientRect().top}px;
-        width:${item.offsetWidth}px; opacity:0.85; z-index:999;
-        pointer-events:none; box-shadow:0 8px 24px rgba(0,0,0,0.2);
+        position:fixed;
+        left:${rect.left}px;
+        top:${rect.top}px;
+        width:${rect.width}px;
+        opacity:0.85; z-index:999;
+        pointer-events:none;
+        box-shadow:0 8px 24px rgba(0,0,0,0.2);
         transition:none;
       `;
       document.body.appendChild(clone);
@@ -621,17 +628,23 @@ function setupTouchDrag(item, di, placeId) {
     }
 
     if (!clone) return;
+
+    // fixed position이므로 clientY 기준 이동 (스크롤 무관)
     clone.style.transform = `translate(${dx}px,${dy}px)`;
 
+    // 현재 손가락 위치의 실제 엘리먼트 찾기
+    clone.style.visibility = 'hidden';
     const el = document.elementFromPoint(t.clientX, t.clientY);
+    clone.style.visibility = '';
     const target = el?.closest?.('.place-item');
     document.querySelectorAll('.place-item').forEach(el => el.classList.remove('drag-over'));
     if (target && target.dataset.id !== placeId) target.classList.add('drag-over');
   }, { passive: false });
 
   handle.addEventListener('touchend', e => {
-    if (!clone) { isDragging = false; return; }
+    if (!isDragging || !clone) { isDragging = false; return; }
     const t = e.changedTouches[0];
+    clone.style.visibility = 'hidden';
     const el = document.elementFromPoint(t.clientX, t.clientY);
     const target = el?.closest?.('.place-item');
     if (target && target.dataset.id && target.dataset.id !== placeId) {
