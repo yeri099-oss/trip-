@@ -579,9 +579,18 @@ function setupDragDrop(list, di) {
 function reorder(fromDay, toDay, srcId, destId) {
   const src = days[fromDay].places.find(p => p.id === srcId);
   if (!src) return;
+
+  const srcIdx = days[fromDay].places.findIndex(p => p.id === srcId);
+  const destIdxBefore = days[toDay].places.findIndex(p => p.id === destId);
+
   days[fromDay].places = days[fromDay].places.filter(p => p.id !== srcId);
+
+  // 같은 날, 아래로 이동하는 경우 인덱스가 1 줄었으므로 보정 불필요
+  // 다른 날이거나 위로 이동이면 그대로
   const destIdx = days[toDay].places.findIndex(p => p.id === destId);
-  days[toDay].places.splice(destIdx, 0, src);
+  // 드래그 소스가 dest보다 위에 있었으면(아래로 이동) dest 뒤에 삽입
+  const insertAfter = (fromDay === toDay && srcIdx < destIdxBefore);
+  days[toDay].places.splice(insertAfter ? destIdx + 1 : destIdx, 0, src);
   render();
 }
 
@@ -603,36 +612,40 @@ function setupTouchDrag(item, di, placeId) {
   }, { passive: true });
 
   handle.addEventListener('touchmove', e => {
-    e.preventDefault();
     const t = e.touches[0];
-    // 현재 스크롤 위치 반영한 실제 이동 거리
     const dy = t.clientY - startClientY;
     const dx = t.clientX - startClientX;
 
-    if (!isDragging && (Math.abs(dy) > 4 || Math.abs(dx) > 4)) {
-      isDragging = true;
-      const rect = item.getBoundingClientRect();
-      clone = item.cloneNode(true);
-      clone.style.cssText = `
-        position:fixed;
-        left:${rect.left}px;
-        top:${rect.top}px;
-        width:${rect.width}px;
-        opacity:0.85; z-index:999;
-        pointer-events:none;
-        box-shadow:0 8px 24px rgba(0,0,0,0.2);
-        transition:none;
-      `;
-      document.body.appendChild(clone);
-      item.style.opacity = '0.3';
+    if (!isDragging) {
+      // 아직 드래그 시작 전 — 스크롤 허용
+      if (Math.abs(dy) > 6 || Math.abs(dx) > 6) {
+        isDragging = true;
+        const rect = item.getBoundingClientRect();
+        clone = item.cloneNode(true);
+        clone.style.cssText = `
+          position:fixed;
+          left:${rect.left}px;
+          top:${rect.top}px;
+          width:${rect.width}px;
+          opacity:0.85; z-index:999;
+          pointer-events:none;
+          box-shadow:0 8px 24px rgba(0,0,0,0.2);
+          transition:none;
+        `;
+        document.body.appendChild(clone);
+        item.style.opacity = '0.3';
+      } else {
+        return; // 아직 드래그 확정 안 됨
+      }
     }
+
+    // 드래그 확정 후엔 스크롤 막기
+    e.preventDefault();
 
     if (!clone) return;
 
-    // fixed position이므로 clientY 기준 이동 (스크롤 무관)
     clone.style.transform = `translate(${dx}px,${dy}px)`;
 
-    // 현재 손가락 위치의 실제 엘리먼트 찾기
     clone.style.visibility = 'hidden';
     const el = document.elementFromPoint(t.clientX, t.clientY);
     clone.style.visibility = '';
