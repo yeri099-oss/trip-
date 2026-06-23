@@ -140,13 +140,12 @@
     align-items: center;
     gap: 10px;
     padding: 12px 14px;
-    cursor: grab;
     user-select: none;
     transition: box-shadow 0.15s, transform 0.15s, opacity 0.15s;
-    touch-action: none;
+    touch-action: pan-y;
     position: relative;
   }
-  .place-item:active { cursor: grabbing; }
+  .place-item:active { cursor: default; }
   .place-item.dragging {
     opacity: 0.5;
     transform: scale(0.98);
@@ -162,8 +161,11 @@
     flex-shrink: 0;
     line-height: 1;
     cursor: grab;
-    padding: 2px 4px;
+    padding: 6px 6px;
+    touch-action: none;
+    -webkit-user-select: none;
   }
+  .drag-handle:active { cursor: grabbing; }
 
   .place-order {
     font-size: 11px;
@@ -440,6 +442,7 @@
 </div>
 
 <script>
+// ── DATA ──────────────────────────────────────────────────────────────────
 const DAYS = [
   {
     label: '첫째 날', date: '6/26 (목)',
@@ -473,6 +476,7 @@ const DAYS = [
   }
 ];
 
+// 런타임 데이터
 let days = DAYS.map((d, i) => ({
   ...d,
   id: i,
@@ -483,10 +487,12 @@ let addingToDay = null;
 let dragSrc = null;
 let dragSrcDay = null;
 
+// ── NAVER MAP LINK ────────────────────────────────────────────────────────
 function naverMapLink(query) {
   return `https://map.naver.com/v5/search/${encodeURIComponent(query)}`;
 }
 
+// ── RENDER ────────────────────────────────────────────────────────────────
 function render() {
   const app = document.getElementById('app');
   app.innerHTML = '';
@@ -534,6 +540,7 @@ function makePlaceItem(place, di, pi) {
     </div>
   `;
 
+  // 드래그 이벤트
   item.addEventListener('dragstart', e => {
     dragSrc = place.id;
     dragSrcDay = di;
@@ -545,10 +552,13 @@ function makePlaceItem(place, di, pi) {
     document.querySelectorAll('.place-item').forEach(el => el.classList.remove('drag-over'));
   });
 
+  // 터치 드래그 (모바일)
   setupTouchDrag(item, di, place.id);
+
   return item;
 }
 
+// ── DRAG & DROP (Mouse) ──────────────────────────────────────────────────
 function setupDragDrop(list, di) {
   list.addEventListener('dragover', e => {
     e.preventDefault();
@@ -561,7 +571,8 @@ function setupDragDrop(list, di) {
     e.preventDefault();
     const target = e.target.closest('.place-item');
     if (!target || target.dataset.id === dragSrc) return;
-    reorder(dragSrcDay, di, dragSrc, target.dataset.id);
+    const destId = target.dataset.id;
+    reorder(dragSrcDay, di, dragSrc, destId);
   });
 }
 
@@ -574,38 +585,52 @@ function reorder(fromDay, toDay, srcId, destId) {
   render();
 }
 
+// ── TOUCH DRAG (Mobile) — 핸들에서만 시작 ───────────────────────────────
 function setupTouchDrag(item, di, placeId) {
-  let startY, startX, clone;
-  item.addEventListener('touchstart', e => {
-    if (e.target.closest('a') || e.target.closest('.btn-icon')) return;
+  const handle = item.querySelector('.drag-handle');
+  if (!handle) return;
+
+  let startY, startX, clone, isDragging = false;
+
+  handle.addEventListener('touchstart', e => {
+    e.stopPropagation();
     const t = e.touches[0];
     startY = t.clientY; startX = t.clientX;
     dragSrc = placeId; dragSrcDay = di;
-    clone = item.cloneNode(true);
-    clone.style.cssText = `
-      position:fixed; left:${item.getBoundingClientRect().left}px;
-      top:${item.getBoundingClientRect().top}px;
-      width:${item.offsetWidth}px; opacity:0.85; z-index:999;
-      pointer-events:none; box-shadow:0 8px 24px rgba(0,0,0,0.2);
-      transition:none;
-    `;
-    document.body.appendChild(clone);
-    item.style.opacity = '0.3';
+    isDragging = false;
   }, { passive: true });
 
-  item.addEventListener('touchmove', e => {
-    if (!clone) return;
+  handle.addEventListener('touchmove', e => {
     e.preventDefault();
     const t = e.touches[0];
-    clone.style.transform = `translate(${t.clientX - startX}px,${t.clientY - startY}px)`;
+    const dy = t.clientY - startY;
+    const dx = t.clientX - startX;
+
+    if (!isDragging && (Math.abs(dy) > 4 || Math.abs(dx) > 4)) {
+      isDragging = true;
+      clone = item.cloneNode(true);
+      clone.style.cssText = `
+        position:fixed; left:${item.getBoundingClientRect().left}px;
+        top:${item.getBoundingClientRect().top}px;
+        width:${item.offsetWidth}px; opacity:0.85; z-index:999;
+        pointer-events:none; box-shadow:0 8px 24px rgba(0,0,0,0.2);
+        transition:none;
+      `;
+      document.body.appendChild(clone);
+      item.style.opacity = '0.3';
+    }
+
+    if (!clone) return;
+    clone.style.transform = `translate(${dx}px,${dy}px)`;
+
     const el = document.elementFromPoint(t.clientX, t.clientY);
     const target = el?.closest?.('.place-item');
     document.querySelectorAll('.place-item').forEach(el => el.classList.remove('drag-over'));
     if (target && target.dataset.id !== placeId) target.classList.add('drag-over');
   }, { passive: false });
 
-  item.addEventListener('touchend', e => {
-    if (!clone) return;
+  handle.addEventListener('touchend', e => {
+    if (!clone) { isDragging = false; return; }
     const t = e.changedTouches[0];
     const el = document.elementFromPoint(t.clientX, t.clientY);
     const target = el?.closest?.('.place-item');
@@ -615,16 +640,19 @@ function setupTouchDrag(item, di, placeId) {
       reorder(di, destDayIdx >= 0 ? destDayIdx : di, placeId, target.dataset.id);
     }
     clone.remove(); clone = null;
+    isDragging = false;
     item.style.opacity = '';
     document.querySelectorAll('.place-item').forEach(el => el.classList.remove('drag-over'));
   });
 }
 
+// ── PLACE REMOVE ─────────────────────────────────────────────────────────
 function removePlace(di, id) {
   days[di].places = days[di].places.filter(p => p.id !== id);
   render();
 }
 
+// ── MEMO EDIT ─────────────────────────────────────────────────────────────
 function editMemo(el, di, id) {
   if (el.querySelector('input')) return;
   const place = days[di].places.find(p => p.id === id);
@@ -635,11 +663,15 @@ function editMemo(el, di, id) {
   input.placeholder = '메모를 입력하세요';
   el.replaceWith(input);
   input.focus();
-  const save = () => { place.memo = input.value.trim(); render(); };
+  const save = () => {
+    place.memo = input.value.trim();
+    render();
+  };
   input.addEventListener('blur', save);
   input.addEventListener('keydown', e => { if (e.key === 'Enter') save(); });
 }
 
+// ── MODAL ─────────────────────────────────────────────────────────────────
 function openModal(di) {
   addingToDay = di;
   document.getElementById('searchModal').classList.add('open');
@@ -659,12 +691,15 @@ document.getElementById('searchInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') searchPlaces();
 });
 
+// ── NAVER PLACE SEARCH (공개 API 없으므로 검색 페이지 기반) ─────────────
 async function searchPlaces() {
   const q = document.getElementById('searchInput').value.trim();
   if (!q) return;
   const box = document.getElementById('searchResults');
   box.innerHTML = `<div class="search-loading">검색 중…</div>`;
 
+  // Naver 지역 검색 (CORS 제한으로 클라이언트에서 직접 호출 불가)
+  // 대신 Claude API로 장소 정보 추천
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -692,6 +727,7 @@ async function searchPlaces() {
       box.appendChild(el);
     });
 
+    // 직접 입력 옵션
     const manual = document.createElement('div');
     manual.className = 'result-manual';
     manual.textContent = `"${q}" 이름 그대로 추가하기`;
@@ -699,6 +735,7 @@ async function searchPlaces() {
     box.appendChild(manual);
 
   } catch (e) {
+    // fallback: 직접 입력만
     box.innerHTML = '';
     const manual = document.createElement('div');
     manual.className = 'result-manual';
@@ -710,12 +747,16 @@ async function searchPlaces() {
 
 function addPlace(name, query, memo) {
   if (addingToDay === null) return;
-  days[addingToDay].places.push({ id: `new-${Date.now()}`, name, query, memo });
+  days[addingToDay].places.push({
+    id: `new-${Date.now()}`,
+    name, query, memo
+  });
   closeModal();
   render();
   showToast(`"${name}" 추가됨`);
 }
 
+// ── TOAST ─────────────────────────────────────────────────────────────────
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -723,6 +764,7 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
+// ── INIT ─────────────────────────────────────────────────────────────────
 render();
 </script>
 </body>
