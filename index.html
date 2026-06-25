@@ -883,7 +883,14 @@ function showToast(msg) {
 
 // ── INIT ─────────────────────────────────────────────────────────────────
 init();
-</script>
 
+// module 스크립트에서 onclick 사용 가능하도록 전역 노출
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.searchPlaces = searchPlaces;
+window.addPlace = addPlace;
+window.removePlace = removePlace;
+window.editMemo = editMemo;
+</script>
 </body>
 </html>
