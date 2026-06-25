@@ -441,7 +441,23 @@
   </div>
 </div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCIvN2Y1a9ByNmz4UpgdmaTFrd5SAYZZGY",
+  authDomain: "trip-84bd3.firebaseapp.com",
+  projectId: "trip-84bd3",
+  storageBucket: "trip-84bd3.firebasestorage.app",
+  messagingSenderId: "830387988854",
+  appId: "1:830387988854:web:71dec7e602b6d2d814b257"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const DOC_REF = doc(db, "trip", "plan");
+
 // ── DATA ──────────────────────────────────────────────────────────────────
 const DAYS = [
   {
@@ -477,11 +493,84 @@ const DAYS = [
 ];
 
 // 런타임 데이터
-let days = DAYS.map((d, i) => ({
-  ...d,
-  id: i,
-  places: d.places.map((p, j) => ({ ...p, id: `${i}-${j}-${Date.now()}` }))
-}));
+const STORAGE_KEY = 'trip-plan-2026';
+
+function getDefaultDays() {
+  return DAYS.map((d, i) => ({
+    ...d, id: i,
+    places: d.places.map((p, j) => ({ ...p, id: `${i}-${j}-${Date.now()}` }))
+  }));
+}
+
+async function saveDays() {
+  try {
+    await setDoc(DOC_REF, { days: JSON.stringify(days) });
+  } catch(e) {
+    // fallback: localStorage
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(days)); } catch(e2) {}
+  }
+}
+
+// 실시간 리스너 — 다른 사람이 수정하면 자동 반영
+function startRealtimeSync() {
+  onSnapshot(DOC_REF, (snapshot) => {
+    if (snapshot.exists()) {
+      const remote = JSON.parse(snapshot.data().days);
+      days = remote;
+      renderOnly(); // saveDays 없이 화면만 갱신
+    }
+  });
+}
+
+function renderOnly() {
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+  days.forEach((day, di) => {
+    const block = document.createElement('div');
+    block.className = 'day-block';
+    block.dataset.day = di + 1;
+    block.innerHTML = `
+      <div class="day-header">
+        <span class="day-badge">Day ${di+1}</span>
+        <span class="day-title">${day.date} · ${day.label}</span>
+        <span class="day-count">${day.places.length}곳</span>
+      </div>
+      <div class="place-list" id="list-${di}"></div>
+      <div class="add-area">
+        <button class="btn-add" onclick="openModal(${di})">+ 장소 추가</button>
+      </div>
+    `;
+    app.appendChild(block);
+    const list = block.querySelector(`#list-${di}`);
+    day.places.forEach((place, pi) => list.appendChild(makePlaceItem(place, di, pi)));
+    setupDragDrop(list, di);
+  });
+}
+
+// 초기 로드
+async function init() {
+  try {
+    const snapshot = await getDoc(DOC_REF);
+    if (snapshot.exists()) {
+      days = JSON.parse(snapshot.data().days);
+    } else {
+      days = getDefaultDays();
+      await saveDays();
+    }
+  } catch(e) {
+    // fallback
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      days = saved ? JSON.parse(saved) : getDefaultDays();
+    } catch(e2) {
+      days = getDefaultDays();
+    }
+  }
+  render();
+  startRealtimeSync();
+}
+
+let days = [];
 
 let addingToDay = null;
 let dragSrc = null;
@@ -494,6 +583,7 @@ function naverMapLink(query) {
 
 // ── RENDER ────────────────────────────────────────────────────────────────
 function render() {
+  saveDays();
   const app = document.getElementById('app');
   app.innerHTML = '';
   days.forEach((day, di) => {
@@ -691,6 +781,7 @@ function editMemo(el, di, id) {
   input.focus();
   const save = () => {
     place.memo = input.value.trim();
+    saveDays();
     render();
   };
   input.addEventListener('blur', save);
@@ -791,7 +882,8 @@ function showToast(msg) {
 }
 
 // ── INIT ─────────────────────────────────────────────────────────────────
-render();
+init();
 </script>
+
 </body>
 </html>
