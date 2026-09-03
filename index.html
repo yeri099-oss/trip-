@@ -5,7 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>안동 헤리티지 미식트립</title>
 <meta property="og:title" content="안동 헤리티지 미식트립 — 두수고방 제안 & 꽃밥에피다 리써치">
-<meta property="og:description" content="일정표 · 트립의 흐름 · R&D 관점 기록 · 지역 미식 리스트">
+<meta property="og:description" content="일정표 · R&D 관점 기록 · 트립의 흐름 · 지역 미식 리스트">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yeri099-oss.github.io/trip-/">
+<meta property="og:image" content="https://yeri099-oss.github.io/trip-/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23B0402F'/%3E%3Ctext x='32' y='42' font-size='30' text-anchor='middle' fill='%23fff' font-family='serif'%3E安%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
@@ -118,6 +124,7 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 .srow .notebtn .s{font-size:10.5px;font-weight:500;opacity:.85}
 .srow .notebtn:active{transform:scale(.96)}
 .srow .notebtn.done{background:var(--green-tint);color:var(--green);border:1.5px solid var(--green);box-shadow:none}
+.srow .notebtn.add{background:transparent;color:var(--sub);border:1.5px dashed var(--rule);box-shadow:none;font-weight:700}
 @media(max-width:520px){
   .srow{grid-template-columns:1fr auto;grid-template-areas:"tm tm" "body note";gap:4px 10px}
   .srow.move{grid-template-columns:1fr;grid-template-areas:"tm" "body"}
@@ -164,6 +171,12 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 .chips button.cur{background:var(--ink);color:#fff;border-color:var(--ink)}
 .chips button.cur .n{color:#F6C6B8}
 .chips button.all{border-style:dashed}
+.rpl{display:flex;flex-direction:column;gap:4px;margin-bottom:6px}
+.rpl-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--rule);border-radius:10px;background:#fff}
+.rpl-row .n{font-family:'Nanum Myeongjo',serif;font-weight:800;color:var(--ac);width:18px}
+.rpl-row .nm{flex:1;font-weight:700;font-size:14px}
+.rpl-row .ic{width:32px;height:32px;border-radius:8px;color:var(--sub);display:flex;align-items:center;justify-content:center}
+.rpl .none{padding:12px;text-align:center;color:var(--sub);font-size:13px}
 .rp-head{margin-top:14px;background:var(--ink);color:#F6F1E7;border-radius:16px;padding:18px 18px 16px;display:flex;gap:12px;align-items:flex-start}
 .rp-head .idx{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:30px;color:#F6C6B8;line-height:1}
 .rp-head h3{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:21px;line-height:1.3}
@@ -313,7 +326,11 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
     <span class="sp"></span>
     <button class="btn ghost sm" id="btnAdminLogout">관리자 로그아웃</button>
   </div>
-  <p class="muted" style="margin-top:8px">CSV는 엑셀에서 바로 열립니다. <b>관점별</b>은 ①~⑤ 관점마다 장소·사람 순으로 한 줄씩(보고서 정리용), <b>사람별</b>은 사람×장소 한 줄에 ①~⑤·메모가 옆으로(개인 기록 확인용).</p>
+  <div class="row" style="margin-top:10px;gap:8px">
+    <button class="btn ghost sm" id="btnResetSch">일정표를 엑셀 기본값으로 초기화</button>
+    <button class="btn ghost sm" id="btnResetRndp">R&D 장소를 기본값으로 초기화</button>
+  </div>
+  <p class="muted" style="margin-top:8px">CSV는 엑셀에서 바로 열립니다. <b>관점별</b>은 관점마다 장소·사람 순으로 한 줄씩(보고서 정리용), <b>사람별</b>은 사람×장소 한 줄에 1·2·3·메모가 옆으로(개인 기록 확인용).</p>
   <div class="card" style="margin-top:16px;padding:0;overflow:auto">
     <table class="adm" id="admTable"></table>
   </div>
@@ -332,7 +349,7 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 <!-- ═══ 일정표 ═══ -->
 <section id="pgSchedule" class="page">
   <div class="sec-head"><div><div class="eyebrow">Schedule</div><h2 class="t">일정표</h2></div><button class="btn sm" id="btnAddRowTop">+ 일정 추가</button></div>
-  <p class="lead">각 장소의 <b>내 기록</b>을 누르면 R&D 관점 탭에서 그 장소의 ①~⑤ 관점을 바로 적을 수 있어요. 일정 수정은 카드 오른쪽 위 ✎, 삭제는 ✕ 입니다.</p>
+  <p class="lead">각 장소의 <b>내 기록</b>을 누르면 R&D 관점 탭에서 그 장소의 관점을 바로 적을 수 있어요. 일정 수정은 카드 오른쪽 위 ✎, 삭제는 ✕ 입니다.</p>
   <div class="sch" id="schList"></div>
 </section>
 
@@ -345,9 +362,8 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 
 <!-- ═══ R&D 관점 ═══ -->
 <section id="pgRnd" class="page">
-  <div class="eyebrow">Field Notes</div>
-  <h2 class="t">꽃밥에피다 인사동 R&amp;D 관점</h2>
-  <p class="lead">장소를 고르고 그곳에서 본 것을 ①~⑤ 관점으로 남겨 주세요. 잠시 멈추면 자동 저장되고, 아래에서 다른 참가자의 기록도 함께 볼 수 있어요.</p>
+  <div class="sec-head"><div><div class="eyebrow">Field Notes</div><h2 class="t">꽃밥에피다 인사동 R&amp;D 관점</h2></div><button class="btn sm" id="btnRndPlaces">장소 편집</button></div>
+  <p class="lead">장소를 고르고 그곳에서 본 것을 세 가지 관점으로 남겨 주세요. 잠시 멈추면 자동 저장되고, 아래에서 다른 참가자의 기록도 함께 볼 수 있어요.</p>
   <div class="chips-wrap"><div class="chips" id="rndChips"></div><span class="stat-pill" id="rndStat"></span></div>
   <div id="rndPanel"></div>
 </section>
@@ -390,31 +406,33 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "830387988854",
   appId: "1:830387988854:web:85d1c46b3f4f374214b257"
 };
-const COL = { sch:"andongApp_schedule", flow:"andongApp_flow", places:"andongApp_places", notes:"andongApp_notes", phones:"andongApp_phones" };
+const COL = { sch:"andongApp_schedule", flow:"andongApp_flow", places:"andongApp_places", rndp:"andongApp_rndPlaces", notes:"andongApp_notes", phones:"andongApp_phones" };
 const ADMIN_ID = "goodbab", ADMIN_PW = "goodbab0801", ADMIN_EMAIL = "goodbab@andong-trip.app";
 const DEMO = location.protocol === "file:" || /[?&]demo/.test(location.search);
-const ROUTE = "안동역 → 병산서원 → 까치구멍집 → 중앙신시장 → 영호식당 → 골목안 손국수 → 진맥소주 양조장 → 예미정 → 안동역";
 
 /* ═══════════════ 초기 데이터 (엑셀 반영) ═══════════════ */
 const SEED_SCH = [
-  ["11:11","안동역","30분","도착 및 차량 픽업\nKTX-이음 도착, 쏘카존에서 차량 수령","stop"],
-  ["11:30–12:00","이동","30분","안동역 → 병산서원\n약 25km, 차량 약 30분","move"],
-  ["12:00–13:00","병산서원","1시간","병산서원 → 안동 명소 탐방\n경북 안동시 풍천면 병산길 386","stop"],
-  ["13:00–13:40","이동","40분","병산서원 → 헛제사밥 까치구멍집\n약 33km, 차량 약 40분","move"],
-  ["13:40–14:30","헛제사밥 까치구멍집","40분","헛제사밥 + 식혜 — 안동 제례음식과 음식문화 이해","stop"],
-  ["14:30–14:40","이동","10분","까치구멍집 → 안동중앙신시장\n약 3.2km, 차량 약 8분","move"],
-  ["14:40–15:40","안동중앙신시장 투어","1시간","문어·간고등어·건어물·곡물·나물·두부묵·떡·기름류 등 생활 식재료 관찰\n중앙시장1길 54","stop"],
-  ["15:40–15:50","이동","10분","안동중앙신시장 → 영호식당\n약 0.5km, 도보 약 10분","move"],
-  ["15:50–16:20","영호식당","30분","골부리(다슬기)국 — 안동 로컬 향토 국물 맛보기\n맑은샘길 43-20","stop"],
-  ["16:20–16:30","이동","10분","영호식당 → 골목안 손국수\n약 0.6km, 도보 약 10분","move"],
-  ["16:30–17:00","골목안손국수","30분","골목안 손국수(건진국수 계열) — 안동 향토 국수 문화 체험\n남문로 2","stop"],
-  ["17:00–17:45","이동","45분","골목안손국수 → 맹개마을\n약 36km, 차량 약 45분","move"],
-  ["17:45–18:30","진맥소주 양조장","45분","양조장 필드트립 — 밀 재배, 누룩, 발효, 증류, 안동소주와 음식문화의 관계","stop"],
-  ["18:30–19:20","이동","50분","맹개마을 → 예미정 본채\n약 40km, 차량 약 50분","move"],
-  ["19:20–20:20","예미정","1시간","안동 종가음식과 접빈문화 세션 — 봉제사접빈객, 종가 부엌, 장과 저장음식, 건진국수·묵·두부 등 해설 및 시연","stop"],
-  ["20:20–20:40","이동","20분","예미정 → 안동역\n약 10km, 차량 약 17분","move"],
-  ["20:40–20:55","안동역","15분","쏘카 반납(주유 확인), 짐 정리","stop"],
-  ["21:07","마무리 · 출발","","KTX 이음 720\n21:07 탑승 – 22:58 청량리 도착","move"]
+  ["11:11","안동역","40분","도착 및 차량 픽업\nKTX-이음 도착, 쏘카존에서 차량 수령","stop"],
+  ["12:00–12:40","이동","40분","안동역 → 병산서원\n약 25km, 차량 약 40분","move"],
+  ["12:40–13:30","병산서원","50분","병산서원 : 안동 명소 탐방\n경북 안동시 풍천면 병산길 386","stop"],
+  ["13:30–14:10","이동","40분","병산서원 → 예미정 본채 / 경북 안동시 옹정골길 111\n약 37km, 차량 약 40분","move"],
+  ["14:10–14:55","예미정","40분","안동 종가음식과 접빈문화 세션 — 봉제사접빈객, 종가 부엌, 장과 저장음식, 건진국수·묵·두부 등 해설 및 시연","stop"],
+  ["14:55–15:05","이동","10분","예미정 → 안동 중앙신시장\n약 3.6km, 차량 약 10분","move"],
+  ["15:05–15:40","안동중앙신시장 투어","35분","문어·간고등어·건어물·곡물·나물·두부묵·떡·기름류 등 생활 식재료 관찰\n중앙시장1길 54","stop"],
+  ["15:40–15:50","이동","10분","안동중앙신시장 → 골목안 손국수\n약 0.5km, 도보 약 5분","move"],
+  ["15:50–16:30","골목안손국수","40분","골목안 손국수(건진국수 계열) — 안동 향토 국수 문화 체험\n남문로 2","stop"],
+  ["16:30–16:40","이동","10분","골목안 손국수 → 영호식당\n약 0.26km, 도보 약 5분","move"],
+  ["16:40–17:10","영호식당","30분","영호식당 / 골부리(다슬기)국 — 안동 로컬 향토 국물 맛보기\n맑은샘길 43-20","stop"],
+  ["17:10–17:20","이동","10분","영호식당 → 커피명가 안동점 / 관광단지로 346-52\n약 6km, 차량 약 11분","move"],
+  ["17:20–18:10","커피명가 안동점","50분","커피명가 안동점 : 정리와 커피타임","stop"],
+  ["18:10–18:20","이동","10분","커피명가 안동점 → 헛제사밥 까치구멍집\n약 3.5km, 차량 약 5분","move"],
+  ["18:20–18:50","헛제사밥까치구멍집","30분","헛제사밥 + 식혜 — 안동 제례음식과 음식문화 이해","stop"],
+  ["18:50–19:00","이동","10분","헛제사밥 까치구멍집 → 월영교\n약 0.28km, 도보 약 10분","move"],
+  ["19:00–19:20","월영교","30분","월영교 야경","stop"],
+  ["19:20–19:30","이동","20분","월영교 → 뉴서울 갈비\n약 3.2km, 차량 약 5분","move"],
+  ["19:30–20:20","뉴서울갈비","50분","뉴서울 갈비 : 재래된장 사용하는 안동 갈비골목 한우 갈비 맛집","stop"],
+  ["20:20–20:40","안동역","15분","쏘카 반납(주유 확인), 짐 정리","stop"],
+  ["20:40–21:07","마무리 · 출발","","KTX 이음 720\n21:07 탑승 – 22:58 청량리 도착","move"]
 ].map((r,i)=>({id:"s"+String(i+1).padStart(2,"0"), order:(i+1)*10, time:r[0], place:r[1], dur:r[2], program:r[3], kind:r[4]}));
 
 const SEED_FLOW = [
@@ -456,14 +474,14 @@ const SEED_PLACES = [
   ["디저트 · 카페 · 빵","국가대표 빵선생","","경북 안동시 감성골길 139 전망대 3층","https://naver.me/GlmWIpxz"],
   ["디저트 · 카페 · 빵","커피명가 안동점","스페셜티커피 · 햄프씨드크림라떼","경북 안동시 성곡동 1567","https://naver.me/xcuATLRc"]
 ].map((r,i)=>({id:"p"+String(i+1).padStart(2,"0"), order:(i+1)*10, cat:r[0], name:r[1], feat:r[2], addr:r[3], link:r[4], addedBy:"기본"}));
+// R&D 관점 기록 대상 장소 (일정과 별개로 편집 가능). schId 는 연결된 일정 카드
+const SEED_RNDP = [["r1","s05","예미정"],["r2","s07","안동중앙신시장 투어"],["r3","s09","골목안손국수"],["r4","s11","영호식당"],["r5","s13","커피명가 안동점"],["r6","s15","헛제사밥까치구멍집"],["r7","s19","뉴서울갈비"]].map((r,i)=>({id:r[0], schId:r[1], name:r[2], order:(SEED_SCH.find(x=>x.id===r[1])?.order)||(i+1)*10}));
 const CATS = ["전통주","한우 · 갈비","향토 국수 · 국물","헛제사밥 · 종가음식","민물 · 향토별미","기타 로컬 맛집","디저트 · 카페 · 빵"];
 
 const RND_ITEMS = [
-  {k:"1", no:"①", nm:"가져오고 싶은 식재료", hint:"시장·양조장·종가에서 본 것 중 인사동으로 가져오고 싶은 재료. 어디서 봤는지, 왜 끌렸는지도 함께."},
-  {k:"2", no:"②", nm:"적용하고 싶은 조리법", hint:"건진국수·헛제사밥·묵·두부·장 등에서 본 조리 방식 중 우리 주방에 적용해 볼 만한 것."},
-  {k:"3", no:"③", nm:"상품화할 수 있는 저장음식", hint:"장, 장아찌, 건어물, 떡, 술 등 마켓에서 팔 수 있는 저장 음식 아이디어."},
-  {k:"4", no:"④", nm:"메뉴로 발전시킬 음식", hint:"그로서란트·식당 메뉴로 발전시킬 수 있는 음식과 그 방향."},
-  {k:"5", no:"⑤", nm:"음식과 술의 연결 아이디어", hint:"진맥소주·안동소주와 어떤 음식을 어떻게 짝지을지, 페어링·코스·판매 방식."}
+  {k:"1", no:"1", nm:"가져오고 싶은 식재료", hint:"시장·종가·식당에서 본 것 중 인사동으로 가져오고 싶은 재료. 어디서 봤는지, 왜 끌렸는지도 함께."},
+  {k:"2", no:"2", nm:"적용하고 싶은 조리법", hint:"건진국수·헛제사밥·묵·두부·장 등에서 본 조리 방식 중 우리 주방에 적용해 볼 만한 것."},
+  {k:"4", no:"3", nm:"메뉴로 발전시킬 음식", hint:"그로서란트·식당 메뉴로 발전시킬 수 있는 음식과 그 방향."}
 ];
 const NOTE_FIELDS = [...RND_ITEMS, {k:"m", no:"✎", nm:"메모 · 느낀 점", hint:"관점에 안 들어가는 인상, 사진 찍어둔 것, 물어본 것 등 자유롭게."}];
 
@@ -546,13 +564,14 @@ function alertModal(title, msg){
 
 /* ═══════════════ 데이터 계층 ═══════════════ */
 let db=null, auth=null;
-const demoDB = { sch:{}, flow:{}, places:{}, notes:{}, listeners:{sch:[],flow:[],places:[],notes:[]} };
+const demoDB = { sch:{}, flow:{}, places:{}, rndp:{}, notes:{}, listeners:{sch:[],flow:[],places:[],rndp:[],notes:[]} };
 function demoSeed(){
   SEED_SCH.forEach(r=>demoDB.sch[r.id]={...r});
   SEED_FLOW.forEach(r=>demoDB.flow[r.id]={...r});
   SEED_PLACES.forEach(r=>demoDB.places[r.id]={...r});
-  demoDB.notes["demo1"]={name:"박**", review:"제례음식이 일상 음식으로 이어지는 흐름이 인상적", flow:{f1:"제사 음식이 곧 손님 음식이었다는 점"}, placeNotes:{s07:{1:"문어, 건어물, 콩가루 섞은 국수용 밀가루", 3:"안동식 간고등어 진공 포장", m:"시장 물건 값이 서울보다 훨씬 좋음"}, s05:{2:"헛제사밥 나물을 간장 하나로 비비는 방식"}}, updatedAt:Date.now()-3600e3};
-  demoDB.notes["demo2"]={name:"오**", placeNotes:{s11:{2:"건진국수처럼 삶은 뒤 찬물에 건져 쓰는 방식"}, s13:{5:"진맥소주 + 간고등어 구이"}}, updatedAt:Date.now()-1800e3};
+  SEED_RNDP.forEach(r=>demoDB.rndp[r.id]={...r});
+  demoDB.notes["demo1"]={name:"박**", review:"제례음식이 일상 음식으로 이어지는 흐름이 인상적", flow:{f1:"제사 음식이 곧 손님 음식이었다는 점"}, placeNotes:{r2:{1:"문어, 건어물, 콩가루 섞은 국수용 밀가루", 4:"안동식 간고등어 반찬 세트", m:"시장 물건 값이 서울보다 훨씬 좋음"}, r6:{2:"헛제사밥 나물을 간장 하나로 비비는 방식"}}, updatedAt:Date.now()-3600e3};
+  demoDB.notes["demo2"]={name:"오**", placeNotes:{r3:{2:"건진국수처럼 삶은 뒤 찬물에 건져 쓰는 방식"}, r7:{4:"재래된장 양념 갈비"}}, updatedAt:Date.now()-1800e3};
 }
 function demoNotify(k){ demoDB.listeners[k].forEach(cb=>cb({...demoDB[k]})); }
 const store = {
@@ -573,7 +592,7 @@ const store = {
   },
   async seedIfEmpty(){
     // 최초 1회: 컬렉션이 비어 있으면 엑셀 기본 데이터를 올림
-    const jobs = [[COL.sch,SEED_SCH],[COL.flow,SEED_FLOW],[COL.places,SEED_PLACES]];
+    const jobs = [[COL.sch,SEED_SCH],[COL.flow,SEED_FLOW],[COL.places,SEED_PLACES],[COL.rndp,SEED_RNDP]];
     for(const [col,seed] of jobs){
       try{
         const q = await db.collection(col).limit(1).get();
@@ -586,18 +605,18 @@ const store = {
   },
   listen(k, cb){
     if(DEMO){ demoDB.listeners[k].push(cb); cb({...demoDB[k]}); return ()=>{}; }
-    const col = {sch:COL.sch, flow:COL.flow, places:COL.places, notes:COL.notes}[k];
+    const col = {sch:COL.sch, flow:COL.flow, places:COL.places, rndp:COL.rndp, notes:COL.notes}[k];
     return db.collection(col).onSnapshot(qs=>{ const m={}; qs.forEach(d=>m[d.id]={id:d.id, ...d.data()}); cb(m); },
       err=>toast("실시간 연결 오류: "+(err.code||"")));
   },
   async set(k, id, data){
     if(DEMO){ demoDB[k][id] = deepMerge(demoDB[k][id]||{}, {...JSON.parse(JSON.stringify(data)), id}); demoNotify(k); return; }
-    const col = {sch:COL.sch, flow:COL.flow, places:COL.places, notes:COL.notes}[k];
+    const col = {sch:COL.sch, flow:COL.flow, places:COL.places, rndp:COL.rndp, notes:COL.notes}[k];
     await db.collection(col).doc(id).set(data, {merge:true});
   },
   async del(k, id){
     if(DEMO){ delete demoDB[k][id]; demoNotify(k); return; }
-    const col = {sch:COL.sch, flow:COL.flow, places:COL.places, notes:COL.notes}[k];
+    const col = {sch:COL.sch, flow:COL.flow, places:COL.places, rndp:COL.rndp, notes:COL.notes}[k];
     await db.collection(col).doc(id).delete();
   },
   async getNote(pid){
@@ -639,10 +658,10 @@ let myNote={review:"", flow:{}, placeNotes:{}};
 let rndSel=null;
 let isAdmin=false, REAL={};   // 관리자 모드: pid → {name, phone}
 function whoami(){ return me ? maskName(me.name) : "관리자"; }
-let SCH={}, FLOW={}, PLACES={}, NOTES={};
+let SCH={}, FLOW={}, PLACES={}, RNDP={}, NOTES={};
 let cur="home";
 const PAGES = {home:"pgHome", schedule:"pgSchedule", flow:"pgFlow", rnd:"pgRnd", places:"pgPlaces", records:"pgRecords", admin:"pgAdmin"};
-const NAV_ALL = [["home","⌂ 홈","🏠","홈"],["schedule","일정표","🗓","일정표"],["flow","트립의 흐름","🧭","흐름"],["rnd","R&D 관점","📝","R&D"],["places","미식 리스트","🍚","미식"],["records","기록","👥","기록"],["admin","관리","🔑","관리"]];
+const NAV_ALL = [["home","⌂ 홈","🏠","홈"],["schedule","일정표","🗓","일정표"],["rnd","R&D 관점","📝","R&D"],["flow","트립의 흐름","🧭","흐름"],["places","미식 리스트","🍚","미식"],["records","기록","👥","기록"],["admin","관리","🔑","관리"]];
 function navItems(){ return NAV_ALL.filter(n=>n[0]!=="admin" || isAdmin); }
 
 function go(p, arg){
@@ -676,7 +695,7 @@ function progress(){
   const rndTot = 1;
   const flowIds = Object.keys(FLOW);
   const flowDone = flowIds.filter(id=>(myNote.flow?.[id]||"").trim()).length;
-  const stops = Object.values(SCH).filter(r=>r.kind!=="move");
+  const stops = rndPlaces();
   const noteDone = stops.filter(r=>{ const n=myNote.placeNotes?.[r.id]; return n && Object.values(n).some(v=>String(v||"").trim()); }).length;
   return {rndDone, rndTot, flowDone, flowTot:flowIds.length, noteDone, noteTot:stops.length};
 }
@@ -686,8 +705,8 @@ function renderHome(){
   const pct=(a,b)=>b?Math.round(a/b*100):0;
   const cards=[
     {p:"schedule", ic:"🗓", nm:"일정표", ds:"오늘의 동선과 프로그램. 누구나 수정 가능", pg:null, sub:`${Object.values(SCH).filter(r=>r.kind!=="move").length}곳 방문`},
+    {p:"rnd", ic:"📝", nm:"R&D 관점", ds:"장소별 관점 기록과 종합 소감", pg:pct(p.noteDone+p.rndDone,p.noteTot+p.rndTot), sub:`장소 ${p.noteDone}/${p.noteTot} · 소감 ${p.rndDone?"✓":"○"}`},
     {p:"flow", ic:"🧭", nm:"트립의 흐름", ds:"장소별로 이어지는 질문에 나의 답 남기기", pg:pct(p.flowDone,p.flowTot), sub:`답변 ${p.flowDone}/${p.flowTot}`},
-    {p:"rnd", ic:"📝", nm:"R&D 관점", ds:"장소별 ①~⑤ 관점 기록과 종합 소감", pg:pct(p.noteDone+p.rndDone,p.noteTot+p.rndTot), sub:`장소 ${p.noteDone}/${p.noteTot} · 소감 ${p.rndDone?"✓":"○"}`},
     {p:"places", ic:"🍚", nm:"미식 리스트", ds:"안동 미식 후보 리스트. 추가하고 지도로 찾기", pg:null, sub:`${Object.keys(PLACES).length}곳`},
     {p:"records", ic:"👥", nm:"기록", ds:"모두의 R&D 관점과 소감을 모아 보기", pg:null, sub:`${Object.keys(NOTES).length}명 참여`, wide:true}
   ];
@@ -746,7 +765,8 @@ function renderSchedule(){
   const rows=schRows();
   $("schList").innerHTML = rows.map(r=>{
     const isMove = r.kind==="move";
-    const n = myNote.placeNotes?.[r.id]; const hasNote = n && Object.values(n).some(v=>String(v||"").trim());
+    const rp = isMove ? null : rndPlaceOfSch(r.id);
+    const n = rp ? myNote.placeNotes?.[rp.id] : null; const hasNote = n && Object.values(n).some(v=>String(v||"").trim());
     return `<div class="srow ${isMove?"move":""}" data-id="${r.id}">
       <div class="tools"><button class="ic" data-a="edit" title="수정" aria-label="수정">✎</button><button class="ic" data-a="del" title="삭제" aria-label="삭제">✕</button></div>
       <div class="tm">${esc(r.time)}${r.dur?`<span class="dur">${esc(r.dur)}</span>`:""}</div>
@@ -755,12 +775,13 @@ function renderSchedule(){
         <div class="pr">${esc(r.program)}</div>
         ${r.editedBy?`<div class="who">최근 수정 ${esc(r.editedBy)} · ${fmtTs(r.updatedAt)}</div>`:""}
       </div>
-      ${!isMove?`<button class="notebtn ${hasNote?"done":""}" data-a="note"><span class="i">${hasNote?"✓":"✍"}</span><span>${hasNote?"기록함":"내 기록"}</span><span class="s">${hasNote?"R&D 열기":"R&D 관점"}</span></button>`:""}
+      ${rp?`<button class="notebtn ${hasNote?"done":""}" data-a="note" data-rp="${rp.id}"><span class="i">${hasNote?"✓":"✍"}</span><span>${hasNote?"기록함":"내 기록"}</span><span class="s">${hasNote?"R&D 열기":"R&D 관점"}</span></button>`
+        : (!isMove?`<button class="notebtn add" data-a="rndadd"><span class="i">＋</span><span>R&D</span><span class="s">장소로 추가</span></button>`:"")}
     </div>`;
   }).join("") || `<div class="empty-note">일정이 없습니다. 위의 + 일정 추가 버튼으로 만들어 주세요.</div>`;
   $("schList").querySelectorAll("button").forEach(b=>{
     const id=b.closest(".srow").dataset.id;
-    b.onclick=()=>({note:(i)=>go("rnd",i), edit:openSchEdit, del:delSch}[b.dataset.a])(id);
+    b.onclick=()=>({note:()=>go("rnd", b.dataset.rp), rndadd:()=>addRndFromSch(id), edit:()=>openSchEdit(id), del:()=>delSch(id)}[b.dataset.a])();
   });
 }
 $("btnAddRowTop").onclick=()=>openSchEdit(null);
@@ -777,6 +798,12 @@ function schForm(r){
 }
 function readSchForm(){
   return {time:$("fTime").value.trim(), place:$("fPlace").value.trim(), dur:$("fDur").value.trim(), program:$("fProg").value.trim(), kind:$("fKind").value};
+}
+async function addRndFromSch(schId){
+  const r=SCH[schId]; if(!r) return;
+  if(!await confirmModal({title:"R&D 장소 추가", msg:`'${r.place}'을(를) R&D 관점 기록 장소로 추가하시겠습니까?`, sub:"모든 참가자의 R&D 탭에 장소가 생깁니다."})) return;
+  try{ await store.set("rndp", genId("r"), {name:r.place, schId, order:(r.order||0), addedBy:whoami(), createdAt:now()}); toast("R&D 장소로 추가했어요"); }
+  catch(e){ toast("추가 실패: "+(e.code||e.message)); }
 }
 function openSchEdit(id){
   const isNew = !id;
@@ -805,7 +832,7 @@ function openSchEdit(id){
 }
 async function delSch(id){
   const r=SCH[id]; if(!r) return;
-  const ok = await confirmModal({title:"일정 삭제", msg:`'${r.place}' 일정을 삭제하시겠습니까?`, sub:"삭제하면 모든 참가자의 일정표에서 사라집니다.", okLabel:"삭제", okCls:"danger"});
+  const ok = await confirmModal({title:"일정 삭제", msg:`'${r.place}' 일정을 삭제하시겠습니까?`, sub:"모든 참가자의 일정표에서 사라집니다. R&D 장소와 기록은 그대로 남아요.", okLabel:"삭제", okCls:"danger"});
   if(!ok) return;
   try{ await store.del("sch", id); toast("삭제했어요"); }catch(e){ toast("삭제 실패: "+(e.code||e.message)); }
 }
@@ -871,15 +898,17 @@ async function delFlow(id){
 
 /* ═══════════════ R&D 관점 (장소별) ═══════════════ */
 let rndTimer=null;
-function rndStops(){ return schRows().filter(r=>r.kind!=="move"); }
+function rndPlaces(){ return Object.values(RNDP).sort((a,b)=>(a.order||0)-(b.order||0)); }
+function rndStops(){ return rndPlaces(); } // 호환용 별칭
+function rndPlaceOfSch(schId){ return rndPlaces().find(p=>p.schId===schId) || null; }
 function noteHas(pn){ return !!pn && Object.values(pn).some(v=>String(v||"").trim()); }
 function hm(ts){ const d=new Date(ts); const p=n=>String(n).padStart(2,"0"); return p(d.getHours())+":"+p(d.getMinutes()); }
 function setRndStat(txt, cls){ const e=$("rndStat"); e.textContent=txt; e.className="stat-pill "+(cls||""); }
 function rndSaveBlock(){ return `<div class="rp-save"><button class="btn grn" id="btnRndSave">저장</button><span class="hint">쓰다 멈추면 자동 저장돼요 · 다른 장소로 넘어가도 저장됩니다</span></div>`; }
 function renderRnd(){
   const stops=rndStops();
-  if(!rndSel || (rndSel!=="all" && !SCH[rndSel])) rndSel = stops[0]?.id || "all";
-  $("rndChips").innerHTML = stops.map((r,i)=>`<button data-id="${r.id}" class="${r.id===rndSel?"cur":""} ${noteHas(myNote.placeNotes?.[r.id])?"has":""}"><span class="n">${i+1}</span>${esc(r.place)}<span class="d"></span></button>`).join("") +
+  if(!rndSel || (rndSel!=="all" && !RNDP[rndSel])) rndSel = stops[0]?.id || "all";
+  $("rndChips").innerHTML = stops.map((r,i)=>`<button data-id="${r.id}" class="${r.id===rndSel?"cur":""} ${noteHas(myNote.placeNotes?.[r.id])?"has":""}"><span class="n">${i+1}</span>${esc(r.name)}<span class="d"></span></button>`).join("") +
     `<button data-id="all" class="all ${rndSel==="all"?"cur":""} ${(myNote.review||"").trim()?"has":""}">✎ 종합 소감<span class="d"></span></button>`;
   $("rndChips").querySelectorAll("button").forEach(b=>b.onclick=()=>{ flushRnd(); rndSel=b.dataset.id; renderRnd(); window.scrollTo({top:0,behavior:"smooth"}); });
   const curChip=$("rndChips").querySelector("button.cur"); if(curChip) curChip.scrollIntoView({inline:"center", block:"nearest"});
@@ -890,20 +919,53 @@ function renderRnd(){
     panel.innerHTML=`<div class="rp-head"><div class="idx">✎</div><div><h3>종합 소감 · 감상</h3><div class="pr">하루를 돌아보며 남기고 싶은 소감, 인상 깊었던 장면, 팀에 제안하고 싶은 것.</div></div></div>
       <div class="ritem review card"><textarea data-k="review" placeholder="자유롭게 적어 주세요">${esc(myNote.review||"")}</textarea></div>
       ${rndSaveBlock()}
-      <div class="rp-nav"><button data-go="${stops[stops.length-1]?.id||""}">← ${esc(stops[stops.length-1]?.place||"")}</button></div>`;
+      <div class="rp-nav"><button data-go="${stops[stops.length-1]?.id||""}">← ${esc(stops[stops.length-1]?.name||"")}</button></div>`;
   } else {
-    const r=SCH[rndSel]; const pn=myNote.placeNotes?.[rndSel]||{};
-    panel.innerHTML=`<div class="rp-head"><div class="idx">${idx+1}</div><div><h3>${esc(r.place)}</h3><div class="tm">${esc(r.time)}${r.dur?" · "+esc(r.dur):""}</div><div class="pr">${esc(r.program)}</div></div></div>`+
+    const rp=RNDP[rndSel]; const r=rp.schId?SCH[rp.schId]:null; const pn=myNote.placeNotes?.[rndSel]||{};
+    panel.innerHTML=`<div class="rp-head"><div class="idx">${idx+1}</div><div><h3>${esc(rp.name)}</h3>${r?`<div class="tm">${esc(r.time)}${r.dur?" · "+esc(r.dur):""}</div><div class="pr">${esc(r.program)}</div>`:`<div class="tm">일정과 별도로 추가된 장소</div>`}</div></div>`+
       NOTE_FIELDS.map(i=>`<div class="ritem card"><div class="lb"><span class="no">${i.no}</span><span class="nm">${esc(i.nm)}</span></div><div class="hint">${esc(i.hint)}</div>
         <textarea data-k="${i.k}" placeholder="이곳에서 본 것, 떠오른 생각을 자유롭게">${esc(pn[i.k]||"")}</textarea></div>`).join("")+
       rndSaveBlock()+
-      `<div class="rp-nav"><button data-go="${prev?.id||""}" ${prev?"":"disabled"}>← ${esc(prev?.place||"이전")}</button><button data-go="${next?next.id:"all"}">${next?esc(next.place):"종합 소감"} →</button></div>`+
+      `<div class="rp-nav"><button data-go="${prev?.id||""}" ${prev?"":"disabled"}>← ${esc(prev?.name||"이전")}</button><button data-go="${next?next.id:"all"}">${next?esc(next.name):"종합 소감"} →</button></div>`+
       renderOthers(rndSel);
   }
   panel.querySelectorAll("textarea").forEach(ta=>{ autoGrow(ta); ta.oninput=()=>{ autoGrow(ta); setRndStat("입력 중…","typing"); clearTimeout(rndTimer); rndTimer=setTimeout(saveRnd,1500); }; });
   $("btnRndSave").onclick=async()=>{ await saveRnd(); toast("저장했어요"); };
   panel.querySelectorAll(".rp-nav button").forEach(b=>b.onclick=()=>{ if(!b.dataset.go) return; flushRnd(); rndSel=b.dataset.go; renderRnd(); window.scrollTo({top:0,behavior:"smooth"}); });
   setRndStat(myNote.updatedAt ? "✓ 저장 "+hm(myNote.updatedAt?.toDate?myNote.updatedAt.toDate():myNote.updatedAt) : "");
+}
+$("btnRndPlaces").onclick=()=>openRndPlaces();
+function openRndPlaces(){
+  const wrap=document.createElement("div");
+  const m=openModal({title:"R&D 기록 장소 편집", body:wrap, buttons:[{label:"닫기", cls:"pri", onClick:()=>closeModal(m)}]});
+  const draw=()=>{
+    const list=rndPlaces();
+    const linked=new Set(list.map(p=>p.schId).filter(Boolean));
+    const cands=schRows().filter(r=>r.kind!=="move" && !linked.has(r.id));
+    wrap.innerHTML=`<div class="mini" style="margin-bottom:8px">일정과 별개로, R&D 관점을 적을 장소 목록입니다. 모든 참가자에게 같이 적용돼요.</div>
+      <div class="rpl">${list.map((p,i)=>`<div class="rpl-row"><span class="n">${i+1}</span><span class="nm">${esc(p.name)}</span>${p.schId&&SCH[p.schId]?`<span class="tag gray">${esc(SCH[p.schId].time)}</span>`:`<span class="tag gray">별도</span>`}<button class="ic" data-del="${p.id}" aria-label="삭제">✕</button></div>`).join("") || `<div class="none">장소가 없습니다</div>`}</div>
+      <label>일정에서 추가</label>
+      <div class="row" style="gap:6px"><select class="f" id="rpSel" style="flex:1"><option value="">일정 장소 선택…</option>${cands.map(r=>`<option value="${r.id}">${esc(r.time)} ${esc(r.place)}</option>`).join("")}</select><button class="btn sm grn" id="rpAddSch" style="min-height:48px">추가</button></div>
+      <label>직접 입력해서 추가</label>
+      <div class="row" style="gap:6px"><input class="f" id="rpName" placeholder="예: 안동구시장 찜닭골목" style="flex:1"><button class="btn sm grn" id="rpAddNew" style="min-height:48px">추가</button></div>`;
+    wrap.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{
+      const p=RNDP[b.dataset.del]; if(!p) return;
+      if(!await confirmModal({title:"R&D 장소 삭제", msg:`'${p.name}'을(를) R&D 기록 장소에서 삭제하시겠습니까?`, sub:"이미 적힌 기록은 지워지지 않고 기록 탭에 '(삭제된 장소)'로 남습니다.", okLabel:"삭제", okCls:"danger"})) return;
+      try{ await store.del("rndp", p.id); toast("삭제했어요"); draw(); }catch(e){ toast("삭제 실패: "+(e.code||e.message)); }
+    });
+    $("rpAddSch").onclick=async()=>{
+      const id=$("rpSel").value; const r=SCH[id]; if(!r){ toast("일정 장소를 선택해 주세요"); return; }
+      if(!await confirmModal({title:"R&D 장소 추가", msg:`'${r.place}'을(를) 추가하시겠습니까?`})) return;
+      try{ await store.set("rndp", genId("r"), {name:r.place, schId:id, order:r.order||0, addedBy:whoami(), createdAt:now()}); toast("추가했어요"); draw(); }catch(e){ toast("추가 실패: "+(e.code||e.message)); }
+    };
+    $("rpAddNew").onclick=async()=>{
+      const name=$("rpName").value.trim(); if(!name){ toast("장소 이름을 입력해 주세요"); return; }
+      if(!await confirmModal({title:"R&D 장소 추가", msg:`'${name}'을(를) 추가하시겠습니까?`})) return;
+      const order=(rndPlaces().reduce((mx,p)=>Math.max(mx,p.order||0),0))+10;
+      try{ await store.set("rndp", genId("r"), {name, schId:null, order, addedBy:whoami(), createdAt:now()}); toast("추가했어요"); draw(); }catch(e){ toast("추가 실패: "+(e.code||e.message)); }
+    };
+  };
+  draw();
 }
 function renderOthers(id){
   const list=Object.entries(NOTES).filter(([pid,n])=>!(me&&pid===me.pid) && noteHas(n.placeNotes?.[id]));
@@ -1012,13 +1074,13 @@ function renderRecords(){
   if(!entries.length){ $("recList").innerHTML=`<div class="empty-note">아직 남긴 기록이 없어요.<br>R&D 관점이나 트립의 흐름에 첫 기록을 남겨 보세요.</div>`; return; }
   const nameOf=(pid,n)=> (isAdmin && REAL[pid]?.name) ? REAL[pid].name : maskName(n.name||"");
   const fv=(v)=>String(v||"").trim();
-  const placeName=id=>SCH[id]?.place||"(삭제된 장소)";
+  const placeName=id=>RNDP[id]?.name||"(삭제된 장소)";
   if(recView==="person"){
     $("recList").innerHTML = entries.map(([pid,n])=>{
       const nm=nameOf(pid,n), mine=me&&pid===me.pid;
       let f="";
-      const pns=schRows().filter(r=>noteHas(n.placeNotes?.[r.id]));
-      const orphanP=Object.keys(n.placeNotes||{}).filter(id=>!SCH[id] && noteHas(n.placeNotes[id]));
+      const pns=rndPlaces().filter(r=>noteHas(n.placeNotes?.[r.id]));
+      const orphanP=Object.keys(n.placeNotes||{}).filter(id=>!RNDP[id] && noteHas(n.placeNotes[id]));
       [...pns.map(r=>r.id), ...orphanP].forEach(id=>{
         const pn=n.placeNotes[id];
         f+=`<div class="f"><div class="k">📍 ${esc(placeName(id))}</div>`+NOTE_FIELDS.filter(x=>fv(pn[x.k])).map(x=>`<div class="sub">${x.no} ${esc(x.nm)}</div><div class="v">${esc(pn[x.k])}</div>`).join("")+`</div>`;
@@ -1039,7 +1101,8 @@ function renderRecords(){
     const block=(title, list)=>{ if(!list.length) return; html+=`<div class="rec-item"><div class="it">${title}</div>${list.map(([nm,v,mine,sub])=>`<div class="one"><div class="n">${sub?`<span style="color:var(--ac)">${esc(sub)}</span> · `:""}${esc(nm)}${mine?' <span style="color:var(--ac)">· 나</span>':""}</div><div class="v">${esc(v)}</div></div>`).join("")}</div>`; };
     NOTE_FIELDS.forEach(i=>{
       const list=[];
-      schRows().filter(r=>r.kind!=="move").forEach(r=>entries.forEach(([p,n])=>{ const v=fv(n.placeNotes?.[r.id]?.[i.k]); if(v) list.push([nameOf(p,n), v, me&&p===me.pid, r.place]); }));
+      rndPlaces().forEach(r=>entries.forEach(([p,n])=>{ const v=fv(n.placeNotes?.[r.id]?.[i.k]); if(v) list.push([nameOf(p,n), v, me&&p===me.pid, r.name]); }));
+      entries.forEach(([p,n])=>Object.keys(n.placeNotes||{}).filter(id=>!RNDP[id]).forEach(id=>{ const v=fv(n.placeNotes[id]?.[i.k]); if(v) list.push([nameOf(p,n), v, me&&p===me.pid, "(삭제된 장소)"]); }));
       block(`${i.no} ${esc(i.nm)}`, list);
     });
     block("✎ 종합 소감 · 감상", entries.filter(([p,n])=>fv(n.review)).map(([p,n])=>[nameOf(p,n), n.review, me&&p===me.pid]));
@@ -1094,9 +1157,9 @@ $("btnCsvItem").onclick=()=>{
   const rows=[["관점","장소","이름","전화번호","내용","마지막 저장"]];
   const ents=Object.entries(NOTES);
   NOTE_FIELDS.forEach(f=>{
-    rndStops().forEach(r=>ents.forEach(([pid,n])=>{ const v=String(n.placeNotes?.[r.id]?.[f.k]||"").trim(); if(v) rows.push([f.no+" "+f.nm, r.place, realName(pid), realPhone(pid), v, fmtTs(n.updatedAt)]); }));
+    rndPlaces().forEach(r=>ents.forEach(([pid,n])=>{ const v=String(n.placeNotes?.[r.id]?.[f.k]||"").trim(); if(v) rows.push([f.no+" "+f.nm, r.name, realName(pid), realPhone(pid), v, fmtTs(n.updatedAt)]); }));
     // 삭제된 장소의 기록도 누락 없이
-    ents.forEach(([pid,n])=>Object.keys(n.placeNotes||{}).filter(id=>!SCH[id]).forEach(id=>{ const v=String(n.placeNotes[id]?.[f.k]||"").trim(); if(v) rows.push([f.no+" "+f.nm, "(삭제된 장소)", realName(pid), realPhone(pid), v, fmtTs(n.updatedAt)]); }));
+    ents.forEach(([pid,n])=>Object.keys(n.placeNotes||{}).filter(id=>!RNDP[id]).forEach(id=>{ const v=String(n.placeNotes[id]?.[f.k]||"").trim(); if(v) rows.push([f.no+" "+f.nm, "(삭제된 장소)", realName(pid), realPhone(pid), v, fmtTs(n.updatedAt)]); }));
   });
   ents.forEach(([pid,n])=>{ const v=String(n.review||"").trim(); if(v) rows.push(["종합 소감 · 감상","",realName(pid),realPhone(pid),v,fmtTs(n.updatedAt)]); });
   flowRows().forEach(f=>ents.forEach(([pid,n])=>{ const v=String(n.flow?.[f.id]||"").trim(); if(v) rows.push(["트립의 흐름: "+f.question, f.place, realName(pid), realPhone(pid), v, fmtTs(n.updatedAt)]); }));
@@ -1106,14 +1169,26 @@ $("btnCsvPerson").onclick=()=>{
   const rows=[["이름","전화번호","장소 / 항목", ...NOTE_FIELDS.map(f=>f.no+" "+f.nm), "마지막 저장"]];
   Object.entries(NOTES).sort((a,b)=>realName(a[0]).localeCompare(realName(b[0]),"ko")).forEach(([pid,n])=>{
     const nm=realName(pid), ph=realPhone(pid), ts=fmtTs(n.updatedAt);
-    rndStops().forEach(r=>{ const pn=n.placeNotes?.[r.id]; if(noteHas(pn)) rows.push([nm,ph,r.place,...NOTE_FIELDS.map(f=>String(pn[f.k]||"").trim()),ts]); });
-    Object.keys(n.placeNotes||{}).filter(id=>!SCH[id]).forEach(id=>{ const pn=n.placeNotes[id]; if(noteHas(pn)) rows.push([nm,ph,"(삭제된 장소)",...NOTE_FIELDS.map(f=>String(pn[f.k]||"").trim()),ts]); });
-    const rv=String(n.review||"").trim(); if(rv) rows.push([nm,ph,"종합 소감 · 감상","","","","","",rv,ts]);
-    flowRows().forEach(f=>{ const v=String(n.flow?.[f.id]||"").trim(); if(v) rows.push([nm,ph,"트립의 흐름: "+f.place+" — "+f.question,"","","","","",v,ts]); });
+    rndPlaces().forEach(r=>{ const pn=n.placeNotes?.[r.id]; if(noteHas(pn)) rows.push([nm,ph,r.name,...NOTE_FIELDS.map(f=>String(pn[f.k]||"").trim()),ts]); });
+    Object.keys(n.placeNotes||{}).filter(id=>!RNDP[id]).forEach(id=>{ const pn=n.placeNotes[id]; if(noteHas(pn)) rows.push([nm,ph,"(삭제된 장소)",...NOTE_FIELDS.map(f=>String(pn[f.k]||"").trim()),ts]); });
+    const blank=NOTE_FIELDS.length-1;
+    const rv=String(n.review||"").trim(); if(rv) rows.push([nm,ph,"종합 소감 · 감상",...Array(blank).fill(""),rv,ts]);
+    flowRows().forEach(f=>{ const v=String(n.flow?.[f.id]||"").trim(); if(v) rows.push([nm,ph,"트립의 흐름: "+f.place+" — "+f.question,...Array(blank).fill(""),v,ts]); });
   });
   downloadCsv(rows, "안동미식트립_사람별.csv");
 };
 $("btnAdminRecords").onclick=()=>go("records");
+async function resetCollection(k, seed, label){
+  if(!await confirmModal({title:label+" 초기화", msg:`현재 ${label}을(를) 모두 지우고 엑셀 기본값으로 다시 채울까요?`, sub:"참가자가 수정·추가한 내용은 사라집니다. 기록(R&D 입력)은 지워지지 않습니다.", okLabel:"초기화", okCls:"danger"})) return;
+  try{
+    const cur=k==="sch"?SCH:RNDP;
+    for(const id of Object.keys(cur)) await store.del(k, id);
+    for(const r of seed) await store.set(k, r.id, {...r, createdAt:now()});
+    toast(label+"을(를) 초기화했어요");
+  }catch(e){ toast("초기화 실패: "+(e.code||e.message)); }
+}
+$("btnResetSch").onclick=()=>resetCollection("sch", SEED_SCH, "일정표");
+$("btnResetRndp").onclick=()=>resetCollection("rndp", SEED_RNDP, "R&D 장소");
 $("btnAdminLogout").onclick=async()=>{
   if(!await confirmModal({title:"관리자 로그아웃", msg:"관리자 모드를 종료할까요?"})) return;
   await store.adminLogout().catch(()=>{}); isAdmin=false; REAL={}; me=null;
@@ -1148,6 +1223,7 @@ $("inName").addEventListener("keydown",e=>{ if(e.key==="Enter") $("inPhone").foc
 
 function onData(k, m){
   if(k==="sch"){ SCH=m; if(cur==="schedule") renderSchedule(); if(cur==="rnd" && !rndTimer) renderRnd(); }
+  if(k==="rndp"){ RNDP=m; if(cur==="rnd" && !rndTimer) renderRnd(); if(cur==="schedule") renderSchedule(); if(cur==="admin") renderAdmin(); }
   if(k==="flow"){ FLOW=m; if(cur==="flow") renderFlow(); }
   if(k==="places"){ PLACES=m; if(cur==="places") renderPlaces(); }
   if(k==="notes"){ NOTES=m; if(cur==="records") renderRecords(); if(cur==="admin") renderAdmin(); if(cur==="rnd" && rndSel!=="all" && !rndTimer){ const o=$("rndPanel").querySelector(".others"); if(o){ const tmp=document.createElement("div"); tmp.innerHTML=renderOthers(rndSel); o.replaceWith(tmp.firstElementChild); } } }
@@ -1155,7 +1231,7 @@ function onData(k, m){
 }
 (async function boot(){
   try{ await store.init(); }catch(e){ return; }
-  ["sch","flow","places","notes"].forEach(k=>store.listen(k, m=>onData(k,m)));
+  ["sch","flow","places","rndp","notes"].forEach(k=>store.listen(k, m=>onData(k,m)));
   // 관리자 세션이 살아 있으면 관리자로
   if(store.isAdminSession()){ await enterAdmin(); return; }
   // 이전 로그인 복원
