@@ -145,7 +145,15 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 .savestat{font-size:12px;color:var(--green);font-weight:700}
 
 /* ── R&D ── */
-.chips-wrap{position:sticky;top:0;z-index:20;margin:14px -16px 0;padding:8px 16px;background:rgba(246,241,231,.96);backdrop-filter:blur(8px)}
+.chips-wrap{position:sticky;top:0;z-index:20;margin:14px -16px 0;padding:8px 16px;background:rgba(246,241,231,.96);backdrop-filter:blur(8px);display:flex;align-items:center;gap:8px}
+.chips{flex:1;min-width:0}
+.stat-pill{flex:0 0 auto;font-size:11px;font-weight:700;color:var(--green);min-width:0;max-width:80px;text-align:right;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat-pill:empty{display:none}
+.stat-pill.typing{color:var(--sub)}
+.stat-pill.err{color:var(--ac)}
+.rp-save{margin-top:14px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.rp-save .btn{width:100%;max-width:360px;min-height:50px;font-size:16px}
+.rp-save .hint{font-size:12px;color:var(--sub)}
 @media(min-width:721px){.chips-wrap{top:49px}}
 .chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .chips::-webkit-scrollbar{display:none}
@@ -316,9 +324,8 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
   <div class="eyebrow">Field Notes</div>
   <h2 class="t">꽃밥에피다 인사동 R&amp;D 관점</h2>
   <p class="lead">장소를 고르고 그곳에서 본 것을 ①~⑤ 관점으로 남겨 주세요. 잠시 멈추면 자동 저장되고, 아래에서 다른 참가자의 기록도 함께 볼 수 있어요.</p>
-  <div class="chips-wrap"><div class="chips" id="rndChips"></div></div>
+  <div class="chips-wrap"><div class="chips" id="rndChips"></div><span class="stat-pill" id="rndStat"></span></div>
   <div id="rndPanel"></div>
-  <div class="savebar"><span class="savestat" id="rndStat"></span><span class="sp"></span><button class="btn grn" id="btnRndSave">저장</button></div>
 </section>
 
 <!-- ═══ 지역 미식 리스트 ═══ -->
@@ -812,6 +819,9 @@ async function delFlow(id){
 let rndTimer=null;
 function rndStops(){ return schRows().filter(r=>r.kind!=="move"); }
 function noteHas(pn){ return !!pn && Object.values(pn).some(v=>String(v||"").trim()); }
+function hm(ts){ const d=new Date(ts); const p=n=>String(n).padStart(2,"0"); return p(d.getHours())+":"+p(d.getMinutes()); }
+function setRndStat(txt, cls){ const e=$("rndStat"); e.textContent=txt; e.className="stat-pill "+(cls||""); }
+function rndSaveBlock(){ return `<div class="rp-save"><button class="btn grn" id="btnRndSave">저장</button><span class="hint">쓰다 멈추면 자동 저장돼요 · 다른 장소로 넘어가도 저장됩니다</span></div>`; }
 function renderRnd(){
   const stops=rndStops();
   if(!rndSel || (rndSel!=="all" && !SCH[rndSel])) rndSel = stops[0]?.id || "all";
@@ -825,18 +835,21 @@ function renderRnd(){
   if(rndSel==="all"){
     panel.innerHTML=`<div class="rp-head"><div class="idx">✎</div><div><h3>종합 소감 · 감상</h3><div class="pr">하루를 돌아보며 남기고 싶은 소감, 인상 깊었던 장면, 팀에 제안하고 싶은 것.</div></div></div>
       <div class="ritem review card"><textarea data-k="review" placeholder="자유롭게 적어 주세요">${esc(myNote.review||"")}</textarea></div>
+      ${rndSaveBlock()}
       <div class="rp-nav"><button data-go="${stops[stops.length-1]?.id||""}">← ${esc(stops[stops.length-1]?.place||"")}</button></div>`;
   } else {
     const r=SCH[rndSel]; const pn=myNote.placeNotes?.[rndSel]||{};
     panel.innerHTML=`<div class="rp-head"><div class="idx">${idx+1}</div><div><h3>${esc(r.place)}</h3><div class="tm">${esc(r.time)}${r.dur?" · "+esc(r.dur):""}</div><div class="pr">${esc(r.program)}</div></div></div>`+
       NOTE_FIELDS.map(i=>`<div class="ritem card"><div class="lb"><span class="no">${i.no}</span><span class="nm">${esc(i.nm)}</span></div><div class="hint">${esc(i.hint)}</div>
         <textarea data-k="${i.k}" placeholder="이곳에서 본 것, 떠오른 생각을 자유롭게">${esc(pn[i.k]||"")}</textarea></div>`).join("")+
+      rndSaveBlock()+
       `<div class="rp-nav"><button data-go="${prev?.id||""}" ${prev?"":"disabled"}>← ${esc(prev?.place||"이전")}</button><button data-go="${next?next.id:"all"}">${next?esc(next.place):"종합 소감"} →</button></div>`+
       renderOthers(rndSel);
   }
-  panel.querySelectorAll("textarea").forEach(ta=>{ autoGrow(ta); ta.oninput=()=>{ autoGrow(ta); $("rndStat").textContent="입력 중…"; clearTimeout(rndTimer); rndTimer=setTimeout(saveRnd,1500); }; });
+  panel.querySelectorAll("textarea").forEach(ta=>{ autoGrow(ta); ta.oninput=()=>{ autoGrow(ta); setRndStat("입력 중…","typing"); clearTimeout(rndTimer); rndTimer=setTimeout(saveRnd,1500); }; });
+  $("btnRndSave").onclick=async()=>{ await saveRnd(); toast("저장했어요"); };
   panel.querySelectorAll(".rp-nav button").forEach(b=>b.onclick=()=>{ if(!b.dataset.go) return; flushRnd(); rndSel=b.dataset.go; renderRnd(); window.scrollTo({top:0,behavior:"smooth"}); });
-  $("rndStat").textContent = myNote.updatedAt ? "마지막 저장 "+fmtTs(myNote.updatedAt) : "";
+  setRndStat(myNote.updatedAt ? "✓ 저장 "+hm(myNote.updatedAt?.toDate?myNote.updatedAt.toDate():myNote.updatedAt) : "");
 }
 function renderOthers(id){
   const list=Object.entries(NOTES).filter(([pid,n])=>!(me&&pid===me.pid) && noteHas(n.placeNotes?.[id]));
@@ -857,11 +870,10 @@ async function saveRnd(){
   clearTimeout(rndTimer); rndTimer=null;
   const d=collectRnd(); if(!d) return;
   myNote.updatedAt=Date.now();
-  $("rndStat").textContent="저장 중…";
-  try{ await saveMyNote(d); $("rndStat").textContent="저장됨 "+fmtTs(Date.now()); const chip=$("rndChips").querySelector(`button[data-id="${rndSel}"]`); if(chip) chip.classList.toggle("has", rndSel==="all"?!!(myNote.review||"").trim():noteHas(myNote.placeNotes[rndSel])); }
-  catch(e){ $("rndStat").textContent="저장 실패"; toast("저장 실패: "+(e.code||e.message)); }
+  setRndStat("저장 중…","typing");
+  try{ await saveMyNote(d); setRndStat("✓ 저장 "+hm(Date.now())); const chip=$("rndChips").querySelector(`button[data-id="${rndSel}"]`); if(chip) chip.classList.toggle("has", rndSel==="all"?!!(myNote.review||"").trim():noteHas(myNote.placeNotes[rndSel])); }
+  catch(e){ setRndStat("저장 실패","err"); toast("저장 실패: "+(e.code||e.message)); }
 }
-$("btnRndSave").onclick=async()=>{ await saveRnd(); toast("저장했어요"); };
 
 /* ═══════════════ 미식 리스트 ═══════════════ */
 let placeCat="all";
