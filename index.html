@@ -83,7 +83,7 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 
 /* ── 홈 ── */
 .hub{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:22px}
-@media(min-width:640px){.hub{grid-template-columns:repeat(3,1fr)}}
+
 .hub button{text-align:left;background:var(--paper);border:1.5px solid var(--rule);border-radius:16px;padding:16px 15px 14px;box-shadow:var(--shadow);min-height:132px;-webkit-tap-highlight-color:transparent;display:flex;flex-direction:column;gap:6px;transition:.15s}
 .hub button:active{transform:scale(.98)}
 .hub .ic{font-size:24px;line-height:1}
@@ -188,22 +188,28 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 .savebar .btn{min-width:120px}
 
 /* ── 미식 리스트 ── */
-.pcat{margin-top:22px}
-.pcat h3{font-family:'Nanum Myeongjo',serif;font-size:17px;font-weight:800;padding-bottom:8px;border-bottom:2px solid var(--ink);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.pcats{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-top:12px;padding-bottom:2px}
+.pcats::-webkit-scrollbar{display:none}
+.pcats button{flex:0 0 auto;padding:8px 13px;min-height:38px;border-radius:999px;border:1.5px solid var(--rule);background:#fff;font-size:13px;font-weight:700;color:var(--sub);white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.pcats button.cur{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pcat{margin-top:20px}
+.pcat h3{font-family:'Nanum Myeongjo',serif;font-size:17px;font-weight:800;padding-bottom:6px;border-bottom:2px solid var(--ink);margin-bottom:2px;display:flex;align-items:center;gap:8px}
 .pcat h3 .cnt{font-family:'Noto Sans KR',sans-serif;font-size:12px;color:var(--sub);font-weight:500}
-.plist{display:flex;flex-direction:column;gap:8px}
-.pitem{background:var(--paper);border:1px solid var(--rule);border-radius:13px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:8px 10px;align-items:start}
-
-.pitem .nm{font-weight:700;font-size:15.5px}
-.pitem .ft{font-size:13px;color:#4A4239;margin-top:2px}
-.pitem .ad{font-size:12.5px;color:var(--sub);margin-top:2px}
-.pitem .by{font-size:11px;color:var(--sub);margin-top:4px}
-.pitem .pa{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
-.pitem .pa a,.pitem .pa button{display:inline-flex;align-items:center;gap:4px;padding:9px 13px;min-height:40px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;border:1px solid var(--rule);background:#fff;white-space:nowrap}
-.pitem .pa a.map{background:#E9F5EC;border-color:#BFE0C6;color:#1E7A3B}
-.pitem .pa button.del{color:var(--sub)}
-.searchbar{margin-top:14px;display:flex;gap:8px}
+.plist{display:flex;flex-direction:column}
+.pitem{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;padding:11px 4px 11px 2px;border-bottom:1px solid var(--rule2)}
+.pitem:last-child{border-bottom:0}
+.pitem .nm{font-weight:700;font-size:15.5px;line-height:1.35}
+.pitem .nm .by{display:inline-block;margin-left:6px;font-size:11px;font-weight:600;color:var(--green);background:var(--green-tint);padding:1px 7px;border-radius:999px;vertical-align:middle}
+.pitem .ft{font-size:13px;color:#4A4239;line-height:1.45}
+.pitem .ad{font-size:12px;color:var(--sub);line-height:1.45}
+.pitem .pa{grid-row:1/4;grid-column:2;display:flex;align-items:center;gap:4px}
+.pitem .pa a.map{display:inline-flex;align-items:center;gap:4px;padding:8px 12px;min-height:38px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;background:#E9F5EC;border:1px solid #BFE0C6;color:#1E7A3B;white-space:nowrap}
+.pitem .pa a.map.linked{background:#EAF0FB;border-color:#C7D5EE;color:#2F5AA8}
+.pitem .pa button.del{width:34px;height:34px;border-radius:8px;font-size:14px;color:var(--sub);display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.pitem .pa button.del:active{background:var(--rule2)}
+.searchbar{margin-top:12px;display:flex;gap:8px}
 .searchbar input{flex:1}
+@media(min-width:721px){.plist{display:grid;grid-template-columns:1fr 1fr;column-gap:28px}.pitem:nth-last-child(2):nth-child(odd){border-bottom:0}}
 
 /* ── 기록 ── */
 .rtabs{display:flex;gap:6px;margin-top:14px}
@@ -253,7 +259,6 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 .demo-badge{position:fixed;top:8px;right:8px;pointer-events:none;background:#FFE58A;color:#5A4300;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;z-index:60}
 /* ── 모바일 오버라이드 (마지막에 두어 우선 적용) ── */
 @media(max-width:720px){#topnav.on{display:none}#tabbar.on{display:block}}
-@media(max-width:520px){.pitem{grid-template-columns:1fr}.pitem .pa{flex-direction:row;align-items:center}.pitem .pa a.map{flex:1;justify-content:center}}
 </style>
 </head>
 <body>
@@ -319,8 +324,9 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 <!-- ═══ 지역 미식 리스트 ═══ -->
 <section id="pgPlaces" class="page">
   <div class="sec-head"><div><div class="eyebrow">Local Picks</div><h2 class="t">안동 미식 후보 리스트</h2></div><button class="btn pri sm" id="btnAddPlace">+ 추가</button></div>
-  <p class="lead">페이스북을 통해 일반인들에게 안동에 가면 꼭 가보아야 할 식당 리스트를 받았습니다. 누구든 추가할 수 있고, 지도 버튼을 누르면 네이버 지도에서 바로 찾아볼 수 있어요.</p>
+  <p class="lead">페이스북을 통해 일반인들에게 안동에 가면 꼭 가보아야 할 식당 리스트를 받았습니다. 누구든 추가할 수 있고, 지도 버튼을 누르면 네이버 지도에서 바로 찾아볼 수 있어요(📍 등록된 링크, 🔍 상호 검색).</p>
   <div class="searchbar"><input class="f" id="placeQ" placeholder="상호·메뉴·구분 검색"></div>
+  <div class="pcats" id="placeCats"></div>
   <div id="placeList"></div>
 </section>
 
@@ -858,10 +864,16 @@ async function saveRnd(){
 $("btnRndSave").onclick=async()=>{ await saveRnd(); toast("저장했어요"); };
 
 /* ═══════════════ 미식 리스트 ═══════════════ */
+let placeCat="all";
 function renderPlaces(){
   const q=($("placeQ").value||"").trim().toLowerCase();
-  const all=Object.values(PLACES).filter(p=>!q || [p.cat,p.name,p.feat,p.addr].join(" ").toLowerCase().includes(q));
-  const cats=[...CATS, ...[...new Set(all.map(p=>p.cat))].filter(c=>!CATS.includes(c))];
+  const allItems=Object.values(PLACES);
+  const cats=[...CATS, ...[...new Set(allItems.map(p=>p.cat))].filter(c=>!CATS.includes(c))].filter(c=>allItems.some(p=>p.cat===c));
+  if(placeCat!=="all" && !cats.includes(placeCat)) placeCat="all";
+  $("placeCats").innerHTML = [["all",`전체 ${allItems.length}`], ...cats.map(c=>[c, `${c} ${allItems.filter(p=>p.cat===c).length}`])]
+    .map(([k,l])=>`<button data-c="${esc(k)}" class="${k===placeCat?"cur":""}">${esc(l)}</button>`).join("");
+  $("placeCats").querySelectorAll("button").forEach(b=>b.onclick=()=>{ placeCat=b.dataset.c; renderPlaces(); });
+  const all=allItems.filter(p=>(placeCat==="all"||p.cat===placeCat) && (!q || [p.cat,p.name,p.feat,p.addr].join(" ").toLowerCase().includes(q)));
   let html="";
   cats.forEach(c=>{
     const items=all.filter(p=>p.cat===c).sort((a,b)=>(a.order||0)-(b.order||0));
@@ -869,10 +881,12 @@ function renderPlaces(){
     html+=`<div class="pcat"><h3>${esc(c)}<span class="cnt">${items.length}곳</span></h3><div class="plist">`+
       items.map(p=>{
         const url = p.link || naverSearchUrl(p.name);
+        const by = p.addedBy&&p.addedBy!=="기본" ? `<span class="by">${esc(p.addedBy)} 추가</span>` : "";
         return `<div class="pitem" data-id="${p.id}">
-          <div><div class="nm">${esc(p.name)}</div>${p.feat?`<div class="ft">${esc(p.feat)}</div>`:""}${p.addr?`<div class="ad">📍 ${esc(p.addr)}</div>`:""}
-            <div class="by">${p.addedBy&&p.addedBy!=="기본"?`추가 ${esc(p.addedBy)}`:"기본 리스트"}</div></div>
-          <div class="pa"><a class="map" href="${esc(url)}" target="_blank" rel="noopener">${p.link?"지도 링크":"네이버 지도 검색"} ↗</a><button class="del" data-a="del">삭제</button></div>
+          <div class="nm">${esc(p.name)}${by}</div>
+          ${p.feat?`<div class="ft">${esc(p.feat)}</div>`:""}
+          ${p.addr?`<div class="ad">${esc(p.addr)}</div>`:""}
+          <div class="pa"><a class="map ${p.link?"linked":""}" href="${esc(url)}" target="_blank" rel="noopener">${p.link?"📍 지도":"🔍 지도"}</a><button class="del" data-a="del" title="삭제" aria-label="삭제">✕</button></div>
         </div>`;
       }).join("")+`</div></div>`;
   });
