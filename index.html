@@ -22,26 +22,26 @@
 html{-webkit-text-size-adjust:100%}
 body{font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.55;font-size:15px}
 button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
-input,textarea,select{font-family:inherit;font-size:15px;color:var(--ink)}
-textarea{width:100%;border:1.5px solid var(--rule);border-radius:10px;padding:12px 13px;background:#fff;resize:vertical;min-height:110px;line-height:1.6}
+input,textarea,select{font-family:inherit;font-size:16px;color:var(--ink)}
+textarea{width:100%;border:1.5px solid var(--rule);border-radius:12px;padding:13px 14px;background:#fff;resize:none;min-height:120px;line-height:1.65}
 textarea:focus,input:focus,select:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px rgba(176,64,47,.12)}
-input.f,select.f{width:100%;border:1.5px solid var(--rule);border-radius:10px;padding:11px 13px;background:#fff}
+input.f,select.f{width:100%;border:1.5px solid var(--rule);border-radius:12px;padding:13px 14px;background:#fff;min-height:48px}
 .serif{font-family:'Nanum Myeongjo',serif}
 .hidden{display:none!important}
 a{color:var(--indigo)}
-.page{display:none;max-width:860px;margin:0 auto;padding:22px 16px 90px}
+.page{display:none;max-width:860px;margin:0 auto;padding:18px 16px calc(96px + env(safe-area-inset-bottom))}
 .page.on{display:block}
 .eyebrow{font-size:11.5px;letter-spacing:.18em;color:var(--sub);text-transform:uppercase}
 h1.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(22px,5.4vw,32px);font-weight:800;line-height:1.28;margin-top:6px}
 h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-weight:800;line-height:1.3}
 .lead{color:var(--sub);font-size:14px;margin-top:8px;line-height:1.7}
 .card{background:var(--paper);border:1px solid var(--rule);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 18px;border-radius:10px;font-weight:700;font-size:14.5px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);transition:.15s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 18px;min-height:46px;border-radius:12px;font-weight:700;font-size:15px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);transition:.15s;-webkit-tap-highlight-color:transparent}
 .btn:active{transform:scale(.98)}
 .btn.pri{background:var(--ac);border-color:var(--ac);color:#fff}
 .btn.grn{background:var(--green);border-color:var(--green);color:#fff}
 .btn.ghost{border-color:var(--rule);color:var(--sub);background:transparent}
-.btn.sm{padding:7px 12px;font-size:13px;border-radius:8px}
+.btn.sm{padding:8px 14px;min-height:40px;font-size:13.5px;border-radius:10px}
 .btn.danger{border-color:#C9503F;color:#B0402F;background:#fff}
 .btn:disabled{opacity:.5;cursor:default}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -66,6 +66,13 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 
 /* ── 상단 내비 ── */
 #topnav{display:none;position:sticky;top:0;z-index:50;background:rgba(246,241,231,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+#tabbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(255,253,248,.97);backdrop-filter:blur(10px);border-top:1px solid var(--rule);padding-bottom:env(safe-area-inset-bottom)}
+#tabbar .tb{display:grid;grid-template-columns:repeat(6,1fr);max-width:600px;margin:0 auto}
+#tabbar button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 7px;min-height:58px;font-size:10.5px;font-weight:700;color:var(--sub);-webkit-tap-highlight-color:transparent;letter-spacing:-.01em}
+#tabbar button .i{font-size:21px;line-height:1;width:40px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:10px;transition:.15s}
+#tabbar button.cur{color:var(--ac)}
+#tabbar button.cur .i{background:var(--ac-tint)}
+
 #topnav.on{display:block}
 .nav-in{max-width:860px;margin:0 auto;display:flex;gap:6px;padding:8px 10px;overflow-x:auto;scrollbar-width:none}
 .nav-in::-webkit-scrollbar{display:none}
@@ -77,7 +84,7 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 /* ── 홈 ── */
 .hub{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:22px}
 @media(min-width:640px){.hub{grid-template-columns:repeat(3,1fr)}}
-.hub button{text-align:left;background:var(--paper);border:1.5px solid var(--rule);border-radius:16px;padding:16px 15px 14px;box-shadow:var(--shadow);min-height:118px;display:flex;flex-direction:column;gap:6px;transition:.15s}
+.hub button{text-align:left;background:var(--paper);border:1.5px solid var(--rule);border-radius:16px;padding:16px 15px 14px;box-shadow:var(--shadow);min-height:132px;-webkit-tap-highlight-color:transparent;display:flex;flex-direction:column;gap:6px;transition:.15s}
 .hub button:active{transform:scale(.98)}
 .hub .ic{font-size:24px;line-height:1}
 .hub .nm{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:17px;margin-top:2px}
@@ -86,28 +93,42 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 .hub .pg i{display:block;height:100%;background:var(--green);border-radius:3px;transition:.3s}
 .hub button.wide{grid-column:1/-1;background:var(--ink);color:#F6F1E7;border-color:var(--ink);min-height:auto;flex-direction:row;align-items:center}
 .hub button.wide .ds{color:rgba(246,241,231,.65)}
+.share-kakao{width:100%;margin-top:14px;background:#FEE500;border-color:#FEE500;color:#191600;min-height:52px;font-size:15.5px}
+.share-kakao .kk{font-size:18px}
 .route{margin-top:18px;padding:12px 14px;border-left:3px solid var(--ac);background:var(--paper);border-radius:0 12px 12px 0;font-size:13.5px;line-height:1.7;color:var(--sub)}
 
 /* ── 일정표 ── */
 .sch{margin-top:18px;display:flex;flex-direction:column;gap:8px}
-.srow{display:grid;grid-template-columns:86px 1fr;gap:12px;background:var(--paper);border:1px solid var(--rule);border-radius:14px;padding:13px 14px;position:relative}
-.srow.move{background:transparent;border:1px dashed var(--rule);padding:9px 14px;grid-template-columns:86px 1fr}
-.srow .tm{font-family:'Nanum Myeongjo',serif;font-weight:700;font-size:13.5px;color:var(--ac);line-height:1.4}
+.srow{position:relative;display:grid;grid-template-columns:86px 1fr auto;grid-template-areas:"tm body note";gap:8px 12px;background:var(--paper);border:1px solid var(--rule);border-radius:14px;padding:14px 14px 14px 14px}
+.srow.move{background:transparent;border:1px dashed var(--rule);padding:9px 14px;grid-template-areas:"tm body";grid-template-columns:86px 1fr}
+.srow .tm{grid-area:tm;font-family:'Nanum Myeongjo',serif;font-weight:700;font-size:13.5px;color:var(--ac);line-height:1.4;padding-top:2px}
 .srow.move .tm{color:var(--sub);font-weight:400}
 .srow .dur{display:block;font-size:11px;color:var(--sub);font-family:'Noto Sans KR',sans-serif;font-weight:400}
+.srow .body{grid-area:body;min-width:0;padding-right:60px}
 .srow .pl{font-weight:700;font-size:16px}
 .srow.move .pl{font-size:13px;font-weight:500;color:var(--sub)}
 .srow .pr{font-size:13.5px;color:#4A4239;white-space:pre-wrap;margin-top:3px;line-height:1.6}
 .srow.move .pr{font-size:12.5px;color:var(--sub)}
-.srow .acts{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
-.srow .acts button{padding:5px 10px;border-radius:7px;font-size:12px;font-weight:700;border:1px solid var(--rule);background:#fff;color:var(--sub)}
-.srow .acts button.note{border-color:var(--green);color:var(--green);background:var(--green-tint)}
-.srow .acts button.note.done{background:var(--green);color:#fff}
 .srow .who{font-size:11px;color:var(--sub);margin-top:6px}
-@media(max-width:480px){.srow{grid-template-columns:1fr}.srow.move{grid-template-columns:1fr}.srow .tm{margin-bottom:-2px}}
-.sec-head{display:flex;align-items:center;gap:10px;margin-top:22px}
+.srow .tools{position:absolute;top:8px;right:8px;display:flex;gap:4px}
+.srow .tools .ic{width:30px;height:30px;border-radius:8px;font-size:14px;color:var(--sub);background:transparent;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.srow .tools .ic:active{background:var(--rule2)}
+.srow .notebtn{grid-area:note;align-self:center;margin-top:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:88px;min-height:74px;padding:8px 6px;border-radius:14px;background:var(--green);color:#fff;font-weight:800;font-size:14px;box-shadow:0 4px 12px rgba(62,107,82,.3);-webkit-tap-highlight-color:transparent;transition:.15s}
+.srow .notebtn .i{font-size:20px;line-height:1.1}
+.srow .notebtn .s{font-size:10.5px;font-weight:500;opacity:.85}
+.srow .notebtn:active{transform:scale(.96)}
+.srow .notebtn.done{background:var(--green-tint);color:var(--green);border:1.5px solid var(--green);box-shadow:none}
+@media(max-width:520px){
+  .srow{grid-template-columns:1fr auto;grid-template-areas:"tm tm" "body note";gap:4px 10px}
+  .srow.move{grid-template-columns:1fr;grid-template-areas:"tm" "body"}
+  .srow .body{padding-right:0}
+  .srow .tm{padding-right:70px}
+  .srow .notebtn{margin-top:0}
+}
+.sec-head{display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
 .sec-head h2{flex:1}
 .sec-head .btn{white-space:nowrap;flex:0 0 auto}
+@media(max-width:520px){.sec-head>div{flex:1 1 100%}.sec-head .btn{flex:1 1 100%;margin-top:4px}}
 
 /* ── 흐름 ── */
 .flow{margin-top:18px;display:flex;flex-direction:column;gap:0}
@@ -120,7 +141,7 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 .fstep .ans{margin-top:10px}
 .fstep .ans textarea{min-height:96px}
 .fstep .tools{display:flex;gap:6px;margin-top:8px;align-items:center;flex-wrap:wrap}
-.fstep .tools button{padding:5px 10px;border-radius:7px;font-size:12px;font-weight:700;border:1px solid var(--rule);background:#fff;color:var(--sub)}
+.fstep .tools button{padding:9px 13px;min-height:40px;border-radius:10px;font-size:13px;font-weight:700;border:1px solid var(--rule);background:#fff;color:var(--sub)}
 .savestat{font-size:12px;color:var(--green);font-weight:700}
 
 /* ── R&D ── */
@@ -135,7 +156,9 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 .ritem .hint{font-size:12.5px;color:var(--sub);margin-bottom:8px;line-height:1.6}
 .ritem textarea{min-height:150px}
 .ritem.review textarea{min-height:200px}
-.savebar{position:sticky;bottom:0;background:rgba(246,241,231,.95);backdrop-filter:blur(8px);padding:12px 0;margin-top:18px;border-top:1px solid var(--rule);display:flex;gap:10px;align-items:center}
+.savebar{position:sticky;bottom:calc(66px + env(safe-area-inset-bottom));background:rgba(246,241,231,.95);backdrop-filter:blur(8px);padding:12px 0;margin-top:18px;border-top:1px solid var(--rule);display:flex;gap:10px;align-items:center}
+@media(min-width:721px){.savebar{bottom:0}}
+.savebar .btn{min-width:120px}
 
 /* ── 미식 리스트 ── */
 .pcat{margin-top:22px}
@@ -143,12 +166,13 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 .pcat h3 .cnt{font-family:'Noto Sans KR',sans-serif;font-size:12px;color:var(--sub);font-weight:500}
 .plist{display:flex;flex-direction:column;gap:8px}
 .pitem{background:var(--paper);border:1px solid var(--rule);border-radius:13px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:8px 10px;align-items:start}
+
 .pitem .nm{font-weight:700;font-size:15.5px}
 .pitem .ft{font-size:13px;color:#4A4239;margin-top:2px}
 .pitem .ad{font-size:12.5px;color:var(--sub);margin-top:2px}
 .pitem .by{font-size:11px;color:var(--sub);margin-top:4px}
 .pitem .pa{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
-.pitem .pa a,.pitem .pa button{display:inline-flex;align-items:center;gap:4px;padding:6px 10px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;border:1px solid var(--rule);background:#fff;white-space:nowrap}
+.pitem .pa a,.pitem .pa button{display:inline-flex;align-items:center;gap:4px;padding:9px 13px;min-height:40px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;border:1px solid var(--rule);background:#fff;white-space:nowrap}
 .pitem .pa a.map{background:#E9F5EC;border-color:#BFE0C6;color:#1E7A3B}
 .pitem .pa button.del{color:var(--sub)}
 .searchbar{margin-top:14px;display:flex;gap:8px}
@@ -156,7 +180,7 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 
 /* ── 기록 ── */
 .rtabs{display:flex;gap:6px;margin-top:14px}
-.rtabs button{padding:8px 14px;border-radius:999px;border:1.5px solid var(--rule);background:#fff;font-weight:700;font-size:13px;color:var(--sub)}
+.rtabs button{padding:10px 16px;min-height:42px;border-radius:999px;border:1.5px solid var(--rule);background:#fff;font-weight:700;font-size:13px;color:var(--sub)}
 .rtabs button.cur{background:var(--ink);color:#fff;border-color:var(--ink)}
 .rec{margin-top:12px}
 .rec .who{display:flex;align-items:center;gap:8px;margin-bottom:10px}
@@ -179,26 +203,30 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 .empty-note{padding:26px;text-align:center;color:var(--sub);font-size:14px;border:1px dashed var(--rule);border-radius:14px;margin-top:14px}
 
 /* ── 모달 ── */
-.mback{display:none;position:fixed;inset:0;background:rgba(43,36,28,.55);z-index:200;align-items:center;justify-content:center;padding:18px}
+.mback{display:none;position:fixed;inset:0;background:rgba(43,36,28,.55);z-index:200;align-items:center;justify-content:center;padding:14px}
 .mback.on{display:flex}
-.mbox{background:var(--paper);border-radius:18px;width:100%;max-width:520px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,.3);animation:pop .16s ease-out}
+.mbox{background:var(--paper);border-radius:18px;width:100%;max-width:520px;max-height:min(90vh, 90dvh);display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,.3);animation:pop .16s ease-out}
 @keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
 .mhead{display:flex;align-items:center;gap:8px;padding:16px 18px 10px;border-bottom:1px solid var(--rule2)}
 .mhead h3{font-family:'Nanum Myeongjo',serif;font-size:18px;font-weight:800;flex:1;line-height:1.3}
-.mhead .x{width:34px;height:34px;border-radius:50%;font-size:18px;color:var(--sub);background:var(--rule2)}
+.mhead .x{width:40px;height:40px;border-radius:50%;font-size:18px;color:var(--sub);background:var(--rule2)}
 .mbody{padding:14px 18px;overflow:auto;flex:1;font-size:14.5px;line-height:1.65}
 .mbody label{display:block;font-size:12.5px;font-weight:700;color:var(--sub);margin:12px 0 5px}
 .mbody label:first-child{margin-top:0}
-.mbody .cf{text-align:center;padding:14px 4px 6px;font-size:16px;font-weight:700;line-height:1.6}
+.mbody .cf{text-align:center;padding:16px 4px 8px;font-size:17px;font-weight:700;line-height:1.6;white-space:pre-line}
 .mbody .cf small{display:block;font-weight:400;color:var(--sub);font-size:13px;margin-top:6px}
-.mfoot{display:flex;gap:8px;padding:10px 18px 16px;justify-content:flex-end;flex-wrap:wrap}
-.mfoot .btn{min-width:96px}
+.mfoot{display:flex;gap:8px;padding:10px 16px calc(14px + env(safe-area-inset-bottom));justify-content:flex-end;border-top:1px solid var(--rule2)}
+.mfoot .btn{flex:1;min-height:50px;font-size:16px}
+@media(min-width:521px){.mfoot .btn{flex:0 0 auto;min-width:110px}}
 .mbody textarea{min-height:90px}
 .mbody .mini{font-size:12px;color:var(--sub);margin-top:6px}
 
-#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:999px;font-size:13.5px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:300;max-width:92vw;text-align:center}
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:999px;font-size:13.5px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:300;max-width:92vw;text-align:center}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-.demo-badge{position:fixed;bottom:8px;left:8px;pointer-events:none;background:#FFE58A;color:#5A4300;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;z-index:60}
+.demo-badge{position:fixed;top:8px;right:8px;pointer-events:none;background:#FFE58A;color:#5A4300;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;z-index:60}
+/* ── 모바일 오버라이드 (마지막에 두어 우선 적용) ── */
+@media(max-width:720px){#topnav.on{display:none}#tabbar.on{display:block}}
+@media(max-width:520px){.pitem{grid-template-columns:1fr}.pitem .pa{flex-direction:row;align-items:center}.pitem .pa a.map{flex:1;justify-content:center}}
 </style>
 </head>
 <body>
@@ -206,6 +234,7 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 
 <!-- 상단 내비 -->
 <nav id="topnav"><div class="nav-in" id="navIn"></div></nav>
+<nav id="tabbar"><div class="tb" id="tabIn"></div></nav>
 
 <!-- ═══ 로그인 ═══ -->
 <section id="pgLogin" class="page on">
@@ -221,7 +250,7 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
     <label for="inPhone">휴대폰 번호</label>
     <input class="f" id="inPhone" placeholder="010-0000-0000" inputmode="numeric" autocomplete="tel">
     <div class="err" id="loginErr"></div>
-    <button class="btn pri" id="btnStart" style="width:100%;margin-top:18px;padding:14px">시작하기</button>
+    <button class="btn pri" id="btnStart" style="width:100%;margin-top:18px;padding:16px;font-size:17px">시작하기</button>
     <p class="muted" style="margin-top:12px;text-align:center;line-height:1.6">같은 번호로 다시 들어오면 작성하던 기록을 이어서 볼 수 있어요.<br>이름은 다른 참가자에게 첫 글자만 보입니다.</p>
   </div>
 </section>
@@ -231,15 +260,15 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
   <div class="eyebrow">Andong Heritage Food Field Trip · 2026. 9. 8</div>
   <h1 class="t"><span id="homeName"></span>님, 안녕하세요</h1>
   <p class="lead">아래 버튼으로 원하는 부분에 바로 들어가 기록하고 열람할 수 있어요. 언제든 홈으로 돌아올 수 있습니다.</p>
-  <div class="route" id="homeRoute"></div>
   <div class="hub" id="hub"></div>
+  <button class="btn share-kakao" id="btnShare"><span class="kk">💬</span> 카카오톡으로 링크 공유</button>
   <p class="muted" style="margin-top:22px;text-align:center"><button class="btn ghost sm" id="btnLogout">다른 이름으로 시작하기</button></p>
 </section>
 
 <!-- ═══ 일정표 ═══ -->
 <section id="pgSchedule" class="page">
   <div class="sec-head"><div><div class="eyebrow">Schedule</div><h2 class="t">일정표</h2></div><button class="btn sm" id="btnAddRowTop">+ 일정 추가</button></div>
-  <p class="lead">누구나 수정할 수 있어요. 각 일정의 <b>수정</b> 버튼을 누른 뒤 확인 창에서 확인을 눌러야 반영됩니다. <b>내 기록</b>은 그 장소에서 느낀 ①~⑤ 항목을 적는 나만의 메모예요.</p>
+  <p class="lead">각 장소의 <b>내 기록</b> 버튼을 눌러 그곳에서 느낀 ①~⑤ 항목을 남겨 주세요. 일정 수정은 카드 오른쪽 위 ✎, 삭제는 ✕ 입니다(확인 창을 거쳐 반영).</p>
   <div class="sch" id="schList"></div>
 </section>
 
@@ -531,13 +560,13 @@ let myNote={rnd:{}, review:"", flow:{}, placeNotes:{}};
 let SCH={}, FLOW={}, PLACES={}, NOTES={};
 let cur="home";
 const PAGES = {home:"pgHome", schedule:"pgSchedule", flow:"pgFlow", rnd:"pgRnd", places:"pgPlaces", records:"pgRecords"};
-const NAV = [["home","⌂ 홈"],["schedule","일정표"],["flow","트립의 흐름"],["rnd","R&D 관점"],["places","미식 리스트"],["records","기록"]];
+const NAV = [["home","⌂ 홈","🏠","홈"],["schedule","일정표","🗓","일정표"],["flow","트립의 흐름","🧭","흐름"],["rnd","R&D 관점","📝","R&D"],["places","미식 리스트","🍚","미식"],["records","기록","👥","기록"]];
 
 function go(p){
   cur=p;
   document.querySelectorAll(".page").forEach(el=>el.classList.remove("on"));
   $(PAGES[p]).classList.add("on");
-  $("topnav").classList.add("on");
+  $("topnav").classList.add("on"); $("tabbar").classList.add("on");
   renderNav();
   window.scrollTo({top:0});
   if(p==="home") renderHome();
@@ -551,6 +580,8 @@ function go(p){
 function renderNav(){
   $("navIn").innerHTML = NAV.map(([k,l])=>`<button data-p="${k}" class="${k===cur?"cur":""} ${k==="home"?"home":""}">${l}</button>`).join("");
   $("navIn").querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.p));
+  $("tabIn").innerHTML = NAV.map(([k,,ic,sl])=>`<button data-p="${k}" class="${k===cur?"cur":""}"><span class="i">${ic}</span>${sl}</button>`).join("");
+  $("tabIn").querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.p));
 }
 
 /* ═══════════════ 홈 ═══════════════ */
@@ -565,7 +596,6 @@ function progress(){
 }
 function renderHome(){
   $("homeName").textContent = me?.name||"";
-  $("homeRoute").innerHTML = `<b style="color:var(--ink)">동선</b><br>${esc(ROUTE)}`;
   const p=progress();
   const pct=(a,b)=>b?Math.round(a/b*100):0;
   const cards=[
@@ -582,11 +612,20 @@ function renderHome(){
   </button>`).join("");
   $("hub").querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.p));
 }
+$("btnShare").onclick=async()=>{
+  const url = location.origin.startsWith("http") ? location.origin+location.pathname : location.href.split("#")[0];
+  const text = "안동 헤리티지 미식트립 앱\n이름과 휴대폰 번호로 들어와 일정과 기록을 함께 남겨 주세요.";
+  if(navigator.share){
+    try{ await navigator.share({title:"안동 헤리티지 미식트립", text, url}); return; }catch(e){ if(e.name==="AbortError") return; }
+  }
+  try{ await navigator.clipboard.writeText(text+"\n"+url); toast("링크를 복사했어요. 카카오톡 대화창에 붙여넣어 주세요"); }
+  catch(e){ await alertModal("링크 공유", url); }
+};
 $("btnLogout").onclick=async()=>{
   if(!await confirmModal({title:"다른 이름으로 시작", msg:"지금 이름으로 작성한 기록은 저장되어 있어요.\n로그인 화면으로 돌아갈까요?"})) return;
   me=null; myNote={rnd:{},review:"",flow:{},placeNotes:{}};
   try{ localStorage.removeItem("andongMe"); }catch(e){}
-  $("topnav").classList.remove("on");
+  $("topnav").classList.remove("on"); $("tabbar").classList.remove("on");
   document.querySelectorAll(".page").forEach(el=>el.classList.remove("on")); $("pgLogin").classList.add("on");
 };
 
@@ -599,37 +638,49 @@ async function saveMyNote(partial){
 
 /* ═══════════════ 일정표 ═══════════════ */
 function schRows(){ return Object.values(SCH).sort((a,b)=>(a.order||0)-(b.order||0)); }
+function startMin(t){ const m=String(t||"").match(/(\d{1,2})\s*[:：시]\s*(\d{2})?/); if(!m) return null; const h=+m[1], mi=+(m[2]||0); if(h>24||mi>59) return null; return h*60+mi; }
+// 입력한 시간에 맞춰 기존 일정 사이에 자연스럽게 끼워 넣을 order 값 계산
+function orderForTime(time, excludeId){
+  const rows=schRows().filter(r=>r.id!==excludeId);
+  const t=startMin(time);
+  if(t===null || !rows.length) return (rows[rows.length-1]?.order||0)+10;
+  let prev=null;
+  for(const r of rows){
+    const rt=startMin(r.time);
+    if(rt!==null && rt>t){ // 첫 번째로 더 늦은 일정 앞에
+      const a=prev?prev.order:(r.order-10); return (a+r.order)/2;
+    }
+    prev=r;
+  }
+  return (rows[rows.length-1].order||0)+10;
+}
 function renderSchedule(){
   const rows=schRows();
   $("schList").innerHTML = rows.map(r=>{
     const isMove = r.kind==="move";
     const n = myNote.placeNotes?.[r.id]; const hasNote = n && Object.values(n).some(v=>String(v||"").trim());
     return `<div class="srow ${isMove?"move":""}" data-id="${r.id}">
+      <div class="tools"><button class="ic" data-a="edit" title="수정" aria-label="수정">✎</button><button class="ic" data-a="del" title="삭제" aria-label="삭제">✕</button></div>
       <div class="tm">${esc(r.time)}${r.dur?`<span class="dur">${esc(r.dur)}</span>`:""}</div>
-      <div>
+      <div class="body">
         <div class="pl">${esc(r.place)}</div>
         <div class="pr">${esc(r.program)}</div>
         ${r.editedBy?`<div class="who">최근 수정 ${esc(r.editedBy)} · ${fmtTs(r.updatedAt)}</div>`:""}
-        <div class="acts">
-          ${!isMove?`<button class="note ${hasNote?"done":""}" data-a="note">${hasNote?"✓ 내 기록":"내 기록"}</button>`:""}
-          <button data-a="edit">수정</button>
-          <button data-a="add">아래에 추가</button>
-          <button data-a="del">삭제</button>
-        </div>
       </div>
+      ${!isMove?`<button class="notebtn ${hasNote?"done":""}" data-a="note"><span class="i">${hasNote?"✓":"✍"}</span><span>${hasNote?"기록함":"내 기록"}</span><span class="s">${hasNote?"열어서 고치기":"남기기"}</span></button>`:""}
     </div>`;
   }).join("") || `<div class="empty-note">일정이 없습니다. 위의 + 일정 추가 버튼으로 만들어 주세요.</div>`;
   $("schList").querySelectorAll("button").forEach(b=>{
     const id=b.closest(".srow").dataset.id;
-    b.onclick=()=>({note:openPlaceNote, edit:openSchEdit, add:(i)=>openSchEdit(null,i), del:delSch}[b.dataset.a])(id);
+    b.onclick=()=>({note:openPlaceNote, edit:openSchEdit, del:delSch}[b.dataset.a])(id);
   });
 }
-$("btnAddRowTop").onclick=()=>openSchEdit(null,null);
+$("btnAddRowTop").onclick=()=>openSchEdit(null);
 
 function schForm(r){
   const wrap=document.createElement("div");
   wrap.innerHTML=`
-    <label>시간</label><input class="f" id="fTime" value="${esc(r.time||"")}" placeholder="예: 12:00–13:00">
+    <label>시간</label><input class="f" id="fTime" value="${esc(r.time||"")}" placeholder="예: 12:00–13:00"><div class="mini">시작 시간에 맞춰 일정 사이에 자동으로 들어갑니다.</div>
     <label>장소</label><input class="f" id="fPlace" value="${esc(r.place||"")}" placeholder="예: 병산서원 / 이동">
     <label>소요 시간</label><input class="f" id="fDur" value="${esc(r.dur||"")}" placeholder="예: 1시간">
     <label>프로그램 · 메모</label><textarea id="fProg" placeholder="프로그램 내용, 주소, 이동 수단 등">${esc(r.program||"")}</textarea>
@@ -639,7 +690,7 @@ function schForm(r){
 function readSchForm(){
   return {time:$("fTime").value.trim(), place:$("fPlace").value.trim(), dur:$("fDur").value.trim(), program:$("fProg").value.trim(), kind:$("fKind").value};
 }
-function openSchEdit(id, afterId){
+function openSchEdit(id){
   const isNew = !id;
   const r = isNew ? {kind:"stop"} : SCH[id];
   if(!r) return;
@@ -654,12 +705,8 @@ function openSchEdit(id, afterId){
         if(!v.place){ toast("장소를 입력해 주세요"); return; }
         const ok = await confirmModal({title: isNew?"일정 추가":"일정 수정", msg: isNew?"이 일정을 추가하시겠습니까?":"수정하시겠습니까?", sub:"모든 참가자의 일정표에 바로 반영됩니다.", okLabel:"확인"});
         if(!ok) return; // 취소 → 수정 창으로 돌아가 이어서 고침
-        let order;
-        if(isNew){
-          const rows=schRows();
-          if(afterId){ const i=rows.findIndex(x=>x.id===afterId); const a=rows[i]?.order||0; const b=rows[i+1]?.order; order = b!==undefined ? (a+b)/2 : a+10; }
-          else order = (rows[rows.length-1]?.order||0)+10;
-        } else order = r.order;
+        // 시간이 바뀌었거나 새 일정이면 시간 순서에 맞게 자리 잡기
+        const order = (isNew || v.time!==r.time) ? orderForTime(v.time, id) : r.order;
         try{
           await store.set("sch", isNew?genId("s"):id, {...v, order, editedBy: maskName(me.name), updatedAt: now()});
           closeModal(m); toast(isNew?"일정을 추가했어요":"일정을 수정했어요");
