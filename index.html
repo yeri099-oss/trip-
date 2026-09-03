@@ -67,7 +67,7 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 /* ── 상단 내비 ── */
 #topnav{display:none;position:sticky;top:0;z-index:50;background:rgba(246,241,231,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
 #tabbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(255,253,248,.97);backdrop-filter:blur(10px);border-top:1px solid var(--rule);padding-bottom:env(safe-area-inset-bottom)}
-#tabbar .tb{display:grid;grid-template-columns:repeat(6,1fr);max-width:600px;margin:0 auto}
+#tabbar .tb{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;max-width:600px;margin:0 auto}
 #tabbar button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 7px;min-height:58px;font-size:10.5px;font-weight:700;color:var(--sub);-webkit-tap-highlight-color:transparent;letter-spacing:-.01em}
 #tabbar button .i{font-size:21px;line-height:1;width:40px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:10px;transition:.15s}
 #tabbar button.cur{color:var(--ac)}
@@ -264,6 +264,11 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 
 #toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:999px;font-size:13.5px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:300;max-width:92vw;text-align:center}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.adm{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+.adm th{background:var(--rule2);text-align:left;padding:10px 12px;font-size:12px;color:var(--sub);white-space:nowrap}
+.adm td{padding:10px 12px;border-top:1px solid var(--rule2);vertical-align:top;white-space:nowrap}
+.adm td.nm{font-weight:700}
+.adm .x{color:var(--sub);font-size:13px;padding:4px 8px;border-radius:6px;border:1px solid var(--rule)}
 .demo-badge{position:fixed;top:8px;right:8px;pointer-events:none;background:#FFE58A;color:#5A4300;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;z-index:60}
 /* ── 모바일 오버라이드 (마지막에 두어 우선 적용) ── */
 @media(max-width:720px){#topnav.on{display:none}#tabbar.on{display:block}}
@@ -293,6 +298,25 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
     <button class="btn pri" id="btnStart" style="width:100%;margin-top:18px;padding:16px;font-size:17px">시작하기</button>
     <p class="muted" style="margin-top:12px;text-align:center;line-height:1.6">같은 번호로 다시 들어오면 작성하던 기록을 이어서 볼 수 있어요.<br>이름은 다른 참가자에게 첫 글자만 보입니다.</p>
   </div>
+  <p style="text-align:center;margin-top:22px"><button class="btn ghost sm" id="btnAdminOpen">관리자 로그인</button></p>
+</section>
+
+<!-- ═══ 관리자 ═══ -->
+<section id="pgAdmin" class="page">
+  <div class="eyebrow">Admin</div>
+  <h2 class="t">관리자 — 취합 · 보고</h2>
+  <p class="lead">참가자 실명과 전화번호는 이 화면에서만 보입니다. 기록 탭도 관리자로 보면 실명으로 표시돼요.</p>
+  <div class="row" style="margin-top:14px;gap:8px">
+    <button class="btn grn" id="btnCsvItem">관점별 CSV</button>
+    <button class="btn grn" id="btnCsvPerson">사람별 CSV</button>
+    <button class="btn" id="btnAdminRecords">실명 기록 보기</button>
+    <span class="sp"></span>
+    <button class="btn ghost sm" id="btnAdminLogout">관리자 로그아웃</button>
+  </div>
+  <p class="muted" style="margin-top:8px">CSV는 엑셀에서 바로 열립니다. <b>관점별</b>은 ①~⑤ 관점마다 장소·사람 순으로 한 줄씩(보고서 정리용), <b>사람별</b>은 사람×장소 한 줄에 ①~⑤·메모가 옆으로(개인 기록 확인용).</p>
+  <div class="card" style="margin-top:16px;padding:0;overflow:auto">
+    <table class="adm" id="admTable"></table>
+  </div>
 </section>
 
 <!-- ═══ 홈 ═══ -->
@@ -308,7 +332,7 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 <!-- ═══ 일정표 ═══ -->
 <section id="pgSchedule" class="page">
   <div class="sec-head"><div><div class="eyebrow">Schedule</div><h2 class="t">일정표</h2></div><button class="btn sm" id="btnAddRowTop">+ 일정 추가</button></div>
-  <p class="lead">각 장소의 <b>내 기록</b>을 누르면 R&D 관점 탭에서 그 장소의 ①~⑤ 관점을 바로 적을 수 있어요. 일정 수정은 카드 오른쪽 위 ✎, 삭제는 ✕ 입니다(확인 창을 거쳐 반영).</p>
+  <p class="lead">각 장소의 <b>내 기록</b>을 누르면 R&D 관점 탭에서 그 장소의 ①~⑤ 관점을 바로 적을 수 있어요. 일정 수정은 카드 오른쪽 위 ✎, 삭제는 ✕ 입니다.</p>
   <div class="sch" id="schList"></div>
 </section>
 
@@ -367,6 +391,7 @@ const FIREBASE_CONFIG = {
   appId: "1:830387988854:web:85d1c46b3f4f374214b257"
 };
 const COL = { sch:"andongApp_schedule", flow:"andongApp_flow", places:"andongApp_places", notes:"andongApp_notes", phones:"andongApp_phones" };
+const ADMIN_ID = "goodbab", ADMIN_PW = "goodbab0801", ADMIN_EMAIL = "goodbab@andong-trip.app";
 const DEMO = location.protocol === "file:" || /[?&]demo/.test(location.search);
 const ROUTE = "안동역 → 병산서원 → 까치구멍집 → 중앙신시장 → 영호식당 → 골목안 손국수 → 진맥소주 양조장 → 예미정 → 안동역";
 
@@ -579,6 +604,29 @@ const store = {
     if(DEMO) return demoDB.notes[pid]||null;
     const d = await db.collection(COL.notes).doc(pid).get(); return d.exists? d.data(): null;
   },
+  async adminLogin(){
+    if(DEMO) return true;
+    const pw=ADMIN_PW+"andong";
+    try{ await auth.signInWithEmailAndPassword(ADMIN_EMAIL, pw); return true; }
+    catch(e){
+      if(["auth/user-not-found","auth/invalid-credential","auth/wrong-password"].includes(e.code)){
+        try{ await auth.createUserWithEmailAndPassword(ADMIN_EMAIL, pw); return true; }
+        catch(e2){ if(e2.code==="auth/email-already-in-use") throw e; throw e2; }
+      }
+      throw e;
+    }
+  },
+  async adminLogout(){ if(DEMO) return; await auth.signOut(); await auth.signInAnonymously().catch(()=>{}); },
+  isAdminSession(){ return !DEMO && auth?.currentUser?.email===ADMIN_EMAIL; },
+  async getPhones(){
+    if(DEMO) return {demo1:{name:"박소정",phone:"010-1111-2222"}, demo2:{name:"오지현",phone:"010-3333-4444"}};
+    const qs=await db.collection(COL.phones).get(); const m={}; qs.forEach(d=>m[d.id]=d.data()); return m;
+  },
+  async deleteParticipant(pid){
+    if(DEMO){ delete demoDB.notes[pid]; demoNotify("notes"); return; }
+    await db.collection(COL.notes).doc(pid).delete();
+    await db.collection(COL.phones).doc(pid).delete().catch(()=>{});
+  },
   async savePhone(pid, name, phone){
     if(DEMO) return;
     await db.collection(COL.phones).doc(pid).set({name, phone, updatedAt: now()}, {merge:true});
@@ -589,10 +637,13 @@ const store = {
 let me=null;                 // {pid, name, phone}
 let myNote={review:"", flow:{}, placeNotes:{}};
 let rndSel=null;
+let isAdmin=false, REAL={};   // 관리자 모드: pid → {name, phone}
+function whoami(){ return me ? maskName(me.name) : "관리자"; }
 let SCH={}, FLOW={}, PLACES={}, NOTES={};
 let cur="home";
-const PAGES = {home:"pgHome", schedule:"pgSchedule", flow:"pgFlow", rnd:"pgRnd", places:"pgPlaces", records:"pgRecords"};
-const NAV = [["home","⌂ 홈","🏠","홈"],["schedule","일정표","🗓","일정표"],["flow","트립의 흐름","🧭","흐름"],["rnd","R&D 관점","📝","R&D"],["places","미식 리스트","🍚","미식"],["records","기록","👥","기록"]];
+const PAGES = {home:"pgHome", schedule:"pgSchedule", flow:"pgFlow", rnd:"pgRnd", places:"pgPlaces", records:"pgRecords", admin:"pgAdmin"};
+const NAV_ALL = [["home","⌂ 홈","🏠","홈"],["schedule","일정표","🗓","일정표"],["flow","트립의 흐름","🧭","흐름"],["rnd","R&D 관점","📝","R&D"],["places","미식 리스트","🍚","미식"],["records","기록","👥","기록"],["admin","관리","🔑","관리"]];
+function navItems(){ return NAV_ALL.filter(n=>n[0]!=="admin" || isAdmin); }
 
 function go(p, arg){
   if(cur==="rnd" && p!=="rnd") flushRnd();
@@ -609,12 +660,13 @@ function go(p, arg){
   if(p==="rnd") renderRnd();
   if(p==="places") renderPlaces();
   if(p==="records") renderRecords();
+  if(p==="admin") renderAdmin();
   try{ history.replaceState(null,"","#"+p); }catch(e){}
 }
 function renderNav(){
-  $("navIn").innerHTML = NAV.map(([k,l])=>`<button data-p="${k}" class="${k===cur?"cur":""} ${k==="home"?"home":""}">${l}</button>`).join("");
+  $("navIn").innerHTML = navItems().map(([k,l])=>`<button data-p="${k}" class="${k===cur?"cur":""} ${k==="home"?"home":""}">${l}</button>`).join("");
   $("navIn").querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.p));
-  $("tabIn").innerHTML = NAV.map(([k,,ic,sl])=>`<button data-p="${k}" class="${k===cur?"cur":""}"><span class="i">${ic}</span>${sl}</button>`).join("");
+  $("tabIn").innerHTML = navItems().map(([k,,ic,sl])=>`<button data-p="${k}" class="${k===cur?"cur":""}"><span class="i">${ic}</span>${sl}</button>`).join("");
   $("tabIn").querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.p));
 }
 
@@ -629,7 +681,7 @@ function progress(){
   return {rndDone, rndTot, flowDone, flowTot:flowIds.length, noteDone, noteTot:stops.length};
 }
 function renderHome(){
-  $("homeName").textContent = me?.name||"";
+  $("homeName").textContent = me?.name||(isAdmin?"관리자":"");
   const p=progress();
   const pct=(a,b)=>b?Math.round(a/b*100):0;
   const cards=[
@@ -639,6 +691,7 @@ function renderHome(){
     {p:"places", ic:"🍚", nm:"미식 리스트", ds:"안동 미식 후보 리스트. 추가하고 지도로 찾기", pg:null, sub:`${Object.keys(PLACES).length}곳`},
     {p:"records", ic:"👥", nm:"기록", ds:"모두의 R&D 관점과 소감을 모아 보기", pg:null, sub:`${Object.keys(NOTES).length}명 참여`, wide:true}
   ];
+  if(isAdmin) cards.push({p:"admin", ic:"🔑", nm:"관리 · 취합", ds:"참가자 실명 목록과 CSV 다운로드", pg:null, sub:"관리자", wide:true});
   $("hub").innerHTML = cards.map(c=>`<button data-p="${c.p}" class="${c.wide?"wide":""}">
     <span class="ic">${c.ic}</span>
     <span><span class="nm">${c.nm}</span><span class="ds" style="display:block">${c.ds}</span></span>
@@ -657,6 +710,7 @@ $("btnShare").onclick=async()=>{
 };
 $("btnLogout").onclick=async()=>{
   if(!await confirmModal({title:"다른 이름으로 시작", msg:"지금 이름으로 작성한 기록은 저장되어 있어요.\n로그인 화면으로 돌아갈까요?"})) return;
+  if(isAdmin){ await store.adminLogout().catch(()=>{}); isAdmin=false; REAL={}; }
   me=null; myNote={review:"",flow:{},placeNotes:{}};
   try{ localStorage.removeItem("andongMe"); }catch(e){}
   $("topnav").classList.remove("on"); $("tabbar").classList.remove("on");
@@ -665,8 +719,8 @@ $("btnLogout").onclick=async()=>{
 
 /* ═══════════════ 내 기록 저장 ═══════════════ */
 async function saveMyNote(partial){
-  if(!me) return;
-  const data = {...partial, name: maskName(me.name), updatedAt: now()};
+  if(!me || isAdmin) return;
+  const data = {...partial, name: whoami(), updatedAt: now()};
   await store.set("notes", me.pid, data);
 }
 
@@ -742,7 +796,7 @@ function openSchEdit(id){
         // 시간이 바뀌었거나 새 일정이면 시간 순서에 맞게 자리 잡기
         const order = (isNew || v.time!==r.time) ? orderForTime(v.time, id) : r.order;
         try{
-          await store.set("sch", isNew?genId("s"):id, {...v, order, editedBy: maskName(me.name), updatedAt: now()});
+          await store.set("sch", isNew?genId("s"):id, {...v, order, editedBy: whoami(), updatedAt: now()});
           closeModal(m); toast(isNew?"일정을 추가했어요":"일정을 수정했어요");
         }catch(e){ toast("저장 실패: "+(e.code||e.message)); }
       }}
@@ -803,7 +857,7 @@ function openFlowEdit(id){
         const ok=await confirmModal({title:isNew?"질문 추가":"질문 수정", msg:isNew?"이 질문을 추가하시겠습니까?":"수정하시겠습니까?", sub:"모든 참가자에게 바로 반영됩니다."});
         if(!ok) return;
         const order = isNew ? (flowRows().slice(-1)[0]?.order||0)+10 : f.order;
-        try{ await store.set("flow", isNew?genId("f"):id, {place, question, order, editedBy:maskName(me.name), updatedAt:now()}); closeModal(m); toast(isNew?"추가했어요":"수정했어요"); }
+        try{ await store.set("flow", isNew?genId("f"):id, {place, question, order, editedBy:whoami(), updatedAt:now()}); closeModal(m); toast(isNew?"추가했어요":"수정했어요"); }
         catch(e){ toast("저장 실패: "+(e.code||e.message)); }
       }}
     ]});
@@ -932,7 +986,7 @@ $("btnAddPlace").onclick=()=>{
         if(!ok) return;
         const order=(Object.values(PLACES).reduce((mx,p)=>Math.max(mx,p.order||0),0))+10;
         try{
-          await store.set("places", genId("p"), {cat, name, feat:$("pFeat").value.trim(), addr:$("pAddr").value.trim(), link:$("pLink").value.trim(), order, addedBy:maskName(me.name), createdAt:now()});
+          await store.set("places", genId("p"), {cat, name, feat:$("pFeat").value.trim(), addr:$("pAddr").value.trim(), link:$("pLink").value.trim(), order, addedBy:whoami(), createdAt:now()});
           closeModal(m); toast("추가했어요");
         }catch(e){ toast("저장 실패: "+(e.code||e.message)); }
       }}
@@ -956,7 +1010,7 @@ function tsNum(ts){ return ts?.toMillis ? ts.toMillis() : (typeof ts==="number"?
 function renderRecords(){
   const entries=Object.entries(NOTES).filter(([pid,n])=>noteHasContent(n)).sort((a,b)=>tsNum(b[1].updatedAt)-tsNum(a[1].updatedAt));
   if(!entries.length){ $("recList").innerHTML=`<div class="empty-note">아직 남긴 기록이 없어요.<br>R&D 관점이나 트립의 흐름에 첫 기록을 남겨 보세요.</div>`; return; }
-  const nameOf=(pid,n)=> maskName(n.name||"");
+  const nameOf=(pid,n)=> (isAdmin && REAL[pid]?.name) ? REAL[pid].name : maskName(n.name||"");
   const fv=(v)=>String(v||"").trim();
   const placeName=id=>SCH[id]?.place||"(삭제된 장소)";
   if(recView==="person"){
@@ -994,6 +1048,79 @@ function renderRecords(){
   }
 }
 
+/* ═══════════════ 관리자 ═══════════════ */
+$("btnAdminOpen").onclick=()=>{
+  const wrap=document.createElement("div");
+  wrap.innerHTML=`<label>아이디</label><input class="f" id="admId" autocomplete="username"><label>비밀번호</label><input class="f" id="admPw" type="password" autocomplete="current-password"><div class="err" id="admErr"></div>`;
+  const m=openModal({title:"관리자 로그인", body:wrap, onShow:()=>{ $("admId").focus(); $("admPw").addEventListener("keydown",e=>{ if(e.key==="Enter") $("mfoot .pri").click(); }); },
+    buttons:[{label:"취소",cls:"ghost",onClick:()=>closeModal(m)},{label:"로그인",cls:"pri",onClick:async()=>{
+      const err=$("admErr"); err.classList.remove("on");
+      if($("admId").value.trim()!==ADMIN_ID || $("admPw").value!==ADMIN_PW){ err.textContent="아이디 또는 비밀번호가 올바르지 않습니다"; err.classList.add("on"); return; }
+      try{ await store.adminLogin(); closeModal(m); await enterAdmin(); }
+      catch(e){ err.textContent="관리자 인증 실패: "+(e.code||e.message); err.classList.add("on"); }
+    }}]});
+};
+async function enterAdmin(){
+  isAdmin=true; me=null; myNote={review:"",flow:{},placeNotes:{}};
+  try{ REAL=await store.getPhones(); }catch(e){ REAL={}; toast("전화번호 목록을 읽지 못했어요: "+(e.code||"")); }
+  go("admin");
+}
+function pStats(n){
+  const stops=rndStops();
+  const placeDone=stops.filter(r=>noteHas(n.placeNotes?.[r.id])).length;
+  const flowDone=flowRows().filter(f=>String(n.flow?.[f.id]||"").trim()).length;
+  return {placeDone, placeTot:stops.length, flowDone, flowTot:flowRows().length, review:!!String(n.review||"").trim()};
+}
+function renderAdmin(){
+  const pids=[...new Set([...Object.keys(NOTES), ...Object.keys(REAL)])];
+  const rows=pids.map(pid=>{ const n=NOTES[pid]||{}; const r=REAL[pid]||{}; return {pid, name:r.name||n.name||"?", phone:r.phone||"", st:pStats(n), ts:n.updatedAt}; })
+    .sort((a,b)=>tsNum(b.ts)-tsNum(a.ts));
+  $("admTable").innerHTML=`<tr><th>이름</th><th>전화번호</th><th>장소 기록</th><th>소감</th><th>흐름 답</th><th>마지막 저장</th><th></th></tr>`+
+    (rows.map(r=>`<tr><td class="nm">${esc(r.name)}</td><td>${esc(r.phone)}</td><td>${r.st.placeDone}/${r.st.placeTot}</td><td>${r.st.review?"✓":"○"}</td><td>${r.st.flowDone}/${r.st.flowTot}</td><td>${fmtTs(r.ts)}</td><td><button class="x" data-pid="${r.pid}">삭제</button></td></tr>`).join("") || `<tr><td colspan="7" style="text-align:center;color:var(--sub)">아직 참가자가 없습니다</td></tr>`);
+  $("admTable").querySelectorAll("button.x").forEach(b=>b.onclick=async()=>{
+    const r=rows.find(x=>x.pid===b.dataset.pid);
+    if(!await confirmModal({title:"참가자 삭제", msg:`${r.name} 님의 기록을 모두 삭제하시겠습니까?`, sub:"되돌릴 수 없습니다.", okLabel:"삭제", okCls:"danger"})) return;
+    try{ await store.deleteParticipant(r.pid); delete REAL[r.pid]; toast("삭제했어요"); renderAdmin(); }catch(e){ toast("삭제 실패: "+(e.code||e.message)); }
+  });
+}
+function realName(pid){ return REAL[pid]?.name || NOTES[pid]?.name || "?"; }
+function realPhone(pid){ return REAL[pid]?.phone || ""; }
+function downloadCsv(rows, fname){
+  const BOM="\uFEFF";
+  const csv=BOM+rows.map(row=>row.map(c=>`"${String(c??"").replace(/"/g,'""')}"`).join(",")).join("\r\n");
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"})); a.download=fname; a.click();
+}
+$("btnCsvItem").onclick=()=>{
+  const rows=[["관점","장소","이름","전화번호","내용","마지막 저장"]];
+  const ents=Object.entries(NOTES);
+  NOTE_FIELDS.forEach(f=>{
+    rndStops().forEach(r=>ents.forEach(([pid,n])=>{ const v=String(n.placeNotes?.[r.id]?.[f.k]||"").trim(); if(v) rows.push([f.no+" "+f.nm, r.place, realName(pid), realPhone(pid), v, fmtTs(n.updatedAt)]); }));
+    // 삭제된 장소의 기록도 누락 없이
+    ents.forEach(([pid,n])=>Object.keys(n.placeNotes||{}).filter(id=>!SCH[id]).forEach(id=>{ const v=String(n.placeNotes[id]?.[f.k]||"").trim(); if(v) rows.push([f.no+" "+f.nm, "(삭제된 장소)", realName(pid), realPhone(pid), v, fmtTs(n.updatedAt)]); }));
+  });
+  ents.forEach(([pid,n])=>{ const v=String(n.review||"").trim(); if(v) rows.push(["종합 소감 · 감상","",realName(pid),realPhone(pid),v,fmtTs(n.updatedAt)]); });
+  flowRows().forEach(f=>ents.forEach(([pid,n])=>{ const v=String(n.flow?.[f.id]||"").trim(); if(v) rows.push(["트립의 흐름: "+f.question, f.place, realName(pid), realPhone(pid), v, fmtTs(n.updatedAt)]); }));
+  downloadCsv(rows, "안동미식트립_관점별.csv");
+};
+$("btnCsvPerson").onclick=()=>{
+  const rows=[["이름","전화번호","장소 / 항목", ...NOTE_FIELDS.map(f=>f.no+" "+f.nm), "마지막 저장"]];
+  Object.entries(NOTES).sort((a,b)=>realName(a[0]).localeCompare(realName(b[0]),"ko")).forEach(([pid,n])=>{
+    const nm=realName(pid), ph=realPhone(pid), ts=fmtTs(n.updatedAt);
+    rndStops().forEach(r=>{ const pn=n.placeNotes?.[r.id]; if(noteHas(pn)) rows.push([nm,ph,r.place,...NOTE_FIELDS.map(f=>String(pn[f.k]||"").trim()),ts]); });
+    Object.keys(n.placeNotes||{}).filter(id=>!SCH[id]).forEach(id=>{ const pn=n.placeNotes[id]; if(noteHas(pn)) rows.push([nm,ph,"(삭제된 장소)",...NOTE_FIELDS.map(f=>String(pn[f.k]||"").trim()),ts]); });
+    const rv=String(n.review||"").trim(); if(rv) rows.push([nm,ph,"종합 소감 · 감상","","","","","",rv,ts]);
+    flowRows().forEach(f=>{ const v=String(n.flow?.[f.id]||"").trim(); if(v) rows.push([nm,ph,"트립의 흐름: "+f.place+" — "+f.question,"","","","","",v,ts]); });
+  });
+  downloadCsv(rows, "안동미식트립_사람별.csv");
+};
+$("btnAdminRecords").onclick=()=>go("records");
+$("btnAdminLogout").onclick=async()=>{
+  if(!await confirmModal({title:"관리자 로그아웃", msg:"관리자 모드를 종료할까요?"})) return;
+  await store.adminLogout().catch(()=>{}); isAdmin=false; REAL={}; me=null;
+  $("topnav").classList.remove("on"); $("tabbar").classList.remove("on");
+  document.querySelectorAll(".page").forEach(el=>el.classList.remove("on")); $("pgLogin").classList.add("on");
+};
+
 /* ═══════════════ 로그인 / 부팅 ═══════════════ */
 async function doStart(){
   const name=$("inName").value.trim();
@@ -1023,12 +1150,14 @@ function onData(k, m){
   if(k==="sch"){ SCH=m; if(cur==="schedule") renderSchedule(); if(cur==="rnd" && !rndTimer) renderRnd(); }
   if(k==="flow"){ FLOW=m; if(cur==="flow") renderFlow(); }
   if(k==="places"){ PLACES=m; if(cur==="places") renderPlaces(); }
-  if(k==="notes"){ NOTES=m; if(cur==="records") renderRecords(); if(cur==="rnd" && rndSel!=="all" && !rndTimer){ const o=$("rndPanel").querySelector(".others"); if(o){ const tmp=document.createElement("div"); tmp.innerHTML=renderOthers(rndSel); o.replaceWith(tmp.firstElementChild); } } }
+  if(k==="notes"){ NOTES=m; if(cur==="records") renderRecords(); if(cur==="admin") renderAdmin(); if(cur==="rnd" && rndSel!=="all" && !rndTimer){ const o=$("rndPanel").querySelector(".others"); if(o){ const tmp=document.createElement("div"); tmp.innerHTML=renderOthers(rndSel); o.replaceWith(tmp.firstElementChild); } } }
   if(cur==="home" && me) renderHome();
 }
 (async function boot(){
   try{ await store.init(); }catch(e){ return; }
   ["sch","flow","places","notes"].forEach(k=>store.listen(k, m=>onData(k,m)));
+  // 관리자 세션이 살아 있으면 관리자로
+  if(store.isAdminSession()){ await enterAdmin(); return; }
   // 이전 로그인 복원
   try{
     const saved=JSON.parse(localStorage.getItem("andongMe")||"null");
