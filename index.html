@@ -145,6 +145,33 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 .savestat{font-size:12px;color:var(--green);font-weight:700}
 
 /* ── R&D ── */
+.chips-wrap{position:sticky;top:0;z-index:20;margin:14px -16px 0;padding:8px 16px;background:rgba(246,241,231,.96);backdrop-filter:blur(8px)}
+@media(min-width:721px){.chips-wrap{top:49px}}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.chips::-webkit-scrollbar{display:none}
+.chips button{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:9px 13px;min-height:42px;border-radius:999px;border:1.5px solid var(--rule);background:#fff;font-size:13.5px;font-weight:700;color:var(--sub);white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.chips button .n{font-family:'Nanum Myeongjo',serif;font-size:12px;color:var(--ac)}
+.chips button .d{width:7px;height:7px;border-radius:50%;background:var(--green);display:none}
+.chips button.has .d{display:block}
+.chips button.cur{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chips button.cur .n{color:#F6C6B8}
+.chips button.all{border-style:dashed}
+.rp-head{margin-top:14px;background:var(--ink);color:#F6F1E7;border-radius:16px;padding:18px 18px 16px;display:flex;gap:12px;align-items:flex-start}
+.rp-head .idx{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:30px;color:#F6C6B8;line-height:1}
+.rp-head h3{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:21px;line-height:1.3}
+.rp-head .tm{font-size:12.5px;color:rgba(246,241,231,.6);margin-top:2px}
+.rp-head .pr{font-size:12.5px;color:rgba(246,241,231,.78);margin-top:6px;line-height:1.55;white-space:pre-wrap}
+.rp-nav{display:flex;gap:8px;margin-top:10px}
+.rp-nav button{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--rule);background:#fff;font-size:13px;font-weight:700;color:var(--sub);min-height:42px}
+.rp-nav button:disabled{opacity:.35}
+.others{margin-top:22px}
+.others h4{font-family:'Nanum Myeongjo',serif;font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+.others h4 .c{font-family:'Noto Sans KR',sans-serif;font-size:12px;color:var(--sub);font-weight:500}
+.others .oc{background:var(--paper);border:1px solid var(--rule);border-radius:13px;padding:12px 14px;margin-top:8px}
+.others .oc .n{font-weight:800;font-size:13.5px;color:var(--indigo);margin-bottom:4px}
+.others .oc .k{font-size:12px;font-weight:700;color:var(--ac);margin-top:7px}
+.others .oc .v{white-space:pre-wrap;font-size:14px;line-height:1.65}
+.others .none{padding:16px;text-align:center;color:var(--sub);font-size:13px;border:1px dashed var(--rule);border-radius:12px;margin-top:8px}
 .rnd-head{background:var(--ink);color:#F6F1E7;border-radius:16px;padding:22px 20px;margin-top:16px}
 .rnd-head .e{font-size:11px;letter-spacing:.22em;color:rgba(246,241,231,.55)}
 .rnd-head h2{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:22px;margin-top:6px;line-height:1.3}
@@ -154,7 +181,7 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 .ritem .no{font-family:'Nanum Myeongjo',serif;font-weight:800;color:var(--ac);font-size:20px}
 .ritem .nm{font-weight:700;font-size:16px}
 .ritem .hint{font-size:12.5px;color:var(--sub);margin-bottom:8px;line-height:1.6}
-.ritem textarea{min-height:150px}
+.ritem textarea{min-height:120px}
 .ritem.review textarea{min-height:200px}
 .savebar{position:sticky;bottom:calc(66px + env(safe-area-inset-bottom));background:rgba(246,241,231,.95);backdrop-filter:blur(8px);padding:12px 0;margin-top:18px;border-top:1px solid var(--rule);display:flex;gap:10px;align-items:center}
 @media(min-width:721px){.savebar{bottom:0}}
@@ -268,7 +295,7 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 <!-- ═══ 일정표 ═══ -->
 <section id="pgSchedule" class="page">
   <div class="sec-head"><div><div class="eyebrow">Schedule</div><h2 class="t">일정표</h2></div><button class="btn sm" id="btnAddRowTop">+ 일정 추가</button></div>
-  <p class="lead">각 장소의 <b>내 기록</b> 버튼을 눌러 그곳에서 느낀 ①~⑤ 항목을 남겨 주세요. 일정 수정은 카드 오른쪽 위 ✎, 삭제는 ✕ 입니다(확인 창을 거쳐 반영).</p>
+  <p class="lead">각 장소의 <b>내 기록</b>을 누르면 R&D 관점 탭에서 그 장소의 ①~⑤ 관점을 바로 적을 수 있어요. 일정 수정은 카드 오른쪽 위 ✎, 삭제는 ✕ 입니다(확인 창을 거쳐 반영).</p>
   <div class="sch" id="schList"></div>
 </section>
 
@@ -283,13 +310,9 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 <section id="pgRnd" class="page">
   <div class="eyebrow">Field Notes</div>
   <h2 class="t">꽃밥에피다 인사동 R&amp;D 관점</h2>
-  <div class="rnd-head">
-    <div class="e">ANDONG HERITAGE FOOD FIELD TRIP</div>
-    <h2>현장에서 본 것을 인사동 식탁으로</h2>
-    <div class="k">시장과 식재료 / 저장과 장 / 소울푸드 / 곡물 발효 / 진맥소주 / 종가의 접빈음식</div>
-  </div>
-  <p class="lead">길이 제한 없이 자유롭게 적어 주세요. 잠시 멈추면 자동으로 저장되고, 언제든 다시 들어와 고칠 수 있어요.</p>
-  <div id="rndItems"></div>
+  <p class="lead">장소를 고르고 그곳에서 본 것을 ①~⑤ 관점으로 남겨 주세요. 잠시 멈추면 자동 저장되고, 아래에서 다른 참가자의 기록도 함께 볼 수 있어요.</p>
+  <div class="chips-wrap"><div class="chips" id="rndChips"></div></div>
+  <div id="rndPanel"></div>
   <div class="savebar"><span class="savestat" id="rndStat"></span><span class="sp"></span><button class="btn grn" id="btnRndSave">저장</button></div>
 </section>
 
@@ -306,7 +329,7 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
   <div class="eyebrow">Shared Notes</div>
   <h2 class="t">기록 — 모두의 R&amp;D 관점</h2>
   <p class="lead">참가자들이 남긴 기록을 실시간으로 모아 봅니다. 이름은 첫 글자만 공개됩니다.</p>
-  <div class="rtabs"><button class="cur" data-v="person">사람별 보기</button><button data-v="item">항목별 모아보기</button></div>
+  <div class="rtabs"><button class="cur" data-v="person">사람별 보기</button><button data-v="item">관점별 모아보기</button></div>
   <div id="recList"></div>
 </section>
 
@@ -404,12 +427,7 @@ const RND_ITEMS = [
   {k:"4", no:"④", nm:"메뉴로 발전시킬 음식", hint:"그로서란트·식당 메뉴로 발전시킬 수 있는 음식과 그 방향."},
   {k:"5", no:"⑤", nm:"음식과 술의 연결 아이디어", hint:"진맥소주·안동소주와 어떤 음식을 어떻게 짝지을지, 페어링·코스·판매 방식."}
 ];
-const PLACE_NOTE_FIELDS = [
-  {k:"a", nm:"① 가져오고 싶은 식재료"},
-  {k:"b", nm:"② 적용하고 싶은 조리법 / ③ 상품화할 저장음식"},
-  {k:"c", nm:"④ 그로서란트 메뉴 아이디어 / ⑤ 음식-술 연결 아이디어"},
-  {k:"m", nm:"메모 · 느낀 점"}
-];
+const NOTE_FIELDS = [...RND_ITEMS, {k:"m", no:"✎", nm:"메모 · 느낀 점", hint:"관점에 안 들어가는 인상, 사진 찍어둔 것, 물어본 것 등 자유롭게."}];
 
 /* ═══════════════ 유틸 ═══════════════ */
 const $ = id => document.getElementById(id);
@@ -495,8 +513,8 @@ function demoSeed(){
   SEED_SCH.forEach(r=>demoDB.sch[r.id]={...r});
   SEED_FLOW.forEach(r=>demoDB.flow[r.id]={...r});
   SEED_PLACES.forEach(r=>demoDB.places[r.id]={...r});
-  demoDB.notes["demo1"]={name:"박**", rnd:{1:"안동 간고등어, 건진국수용 밀가루(콩가루 섞은 것)", 3:"안동식 간고등어 진공 포장"}, review:"제례음식이 일상 음식으로 이어지는 흐름이 인상적", flow:{f1:"제사 음식이 곧 손님 음식이었다는 점"}, placeNotes:{s07:{a:"문어, 건어물", m:"시장 물건 값이 서울보다 훨씬 좋음"}}, updatedAt:Date.now()-3600e3};
-  demoDB.notes["demo2"]={name:"오**", rnd:{2:"건진국수처럼 삶은 뒤 찬물에 건져 쓰는 방식", 5:"진맥소주 + 간고등어 구이"}, updatedAt:Date.now()-1800e3};
+  demoDB.notes["demo1"]={name:"박**", review:"제례음식이 일상 음식으로 이어지는 흐름이 인상적", flow:{f1:"제사 음식이 곧 손님 음식이었다는 점"}, placeNotes:{s07:{1:"문어, 건어물, 콩가루 섞은 국수용 밀가루", 3:"안동식 간고등어 진공 포장", m:"시장 물건 값이 서울보다 훨씬 좋음"}, s05:{2:"헛제사밥 나물을 간장 하나로 비비는 방식"}}, updatedAt:Date.now()-3600e3};
+  demoDB.notes["demo2"]={name:"오**", placeNotes:{s11:{2:"건진국수처럼 삶은 뒤 찬물에 건져 쓰는 방식"}, s13:{5:"진맥소주 + 간고등어 구이"}}, updatedAt:Date.now()-1800e3};
 }
 function demoNotify(k){ demoDB.listeners[k].forEach(cb=>cb({...demoDB[k]})); }
 const store = {
@@ -556,13 +574,16 @@ const store = {
 
 /* ═══════════════ 전역 상태 ═══════════════ */
 let me=null;                 // {pid, name, phone}
-let myNote={rnd:{}, review:"", flow:{}, placeNotes:{}};
+let myNote={review:"", flow:{}, placeNotes:{}};
+let rndSel=null;
 let SCH={}, FLOW={}, PLACES={}, NOTES={};
 let cur="home";
 const PAGES = {home:"pgHome", schedule:"pgSchedule", flow:"pgFlow", rnd:"pgRnd", places:"pgPlaces", records:"pgRecords"};
 const NAV = [["home","⌂ 홈","🏠","홈"],["schedule","일정표","🗓","일정표"],["flow","트립의 흐름","🧭","흐름"],["rnd","R&D 관점","📝","R&D"],["places","미식 리스트","🍚","미식"],["records","기록","👥","기록"]];
 
-function go(p){
+function go(p, arg){
+  if(cur==="rnd" && p!=="rnd") flushRnd();
+  if(p==="rnd" && arg) rndSel=arg;
   cur=p;
   document.querySelectorAll(".page").forEach(el=>el.classList.remove("on"));
   $(PAGES[p]).classList.add("on");
@@ -586,8 +607,8 @@ function renderNav(){
 
 /* ═══════════════ 홈 ═══════════════ */
 function progress(){
-  const rndDone = RND_ITEMS.filter(i=>(myNote.rnd?.[i.k]||"").trim()).length + ((myNote.review||"").trim()?1:0);
-  const rndTot = RND_ITEMS.length+1;
+  const rndDone = ((myNote.review||"").trim()?1:0);
+  const rndTot = 1;
   const flowIds = Object.keys(FLOW);
   const flowDone = flowIds.filter(id=>(myNote.flow?.[id]||"").trim()).length;
   const stops = Object.values(SCH).filter(r=>r.kind!=="move");
@@ -599,9 +620,9 @@ function renderHome(){
   const p=progress();
   const pct=(a,b)=>b?Math.round(a/b*100):0;
   const cards=[
-    {p:"schedule", ic:"🗓", nm:"일정표", ds:"오늘의 동선과 프로그램. 누구나 수정, 장소별 내 기록", pg:pct(p.noteDone,p.noteTot), sub:`장소 기록 ${p.noteDone}/${p.noteTot}`},
+    {p:"schedule", ic:"🗓", nm:"일정표", ds:"오늘의 동선과 프로그램. 누구나 수정 가능", pg:null, sub:`${Object.values(SCH).filter(r=>r.kind!=="move").length}곳 방문`},
     {p:"flow", ic:"🧭", nm:"트립의 흐름", ds:"장소별로 이어지는 질문에 나의 답 남기기", pg:pct(p.flowDone,p.flowTot), sub:`답변 ${p.flowDone}/${p.flowTot}`},
-    {p:"rnd", ic:"📝", nm:"R&D 관점", ds:"①~⑤ 기록 항목과 종합 소감 · 감상", pg:pct(p.rndDone,p.rndTot), sub:`작성 ${p.rndDone}/${p.rndTot}`},
+    {p:"rnd", ic:"📝", nm:"R&D 관점", ds:"장소별 ①~⑤ 관점 기록과 종합 소감", pg:pct(p.noteDone+p.rndDone,p.noteTot+p.rndTot), sub:`장소 ${p.noteDone}/${p.noteTot} · 소감 ${p.rndDone?"✓":"○"}`},
     {p:"places", ic:"🍚", nm:"미식 리스트", ds:"안동 미식 후보 리스트. 추가하고 지도로 찾기", pg:null, sub:`${Object.keys(PLACES).length}곳`},
     {p:"records", ic:"👥", nm:"기록", ds:"모두의 R&D 관점과 소감을 모아 보기", pg:null, sub:`${Object.keys(NOTES).length}명 참여`, wide:true}
   ];
@@ -623,7 +644,7 @@ $("btnShare").onclick=async()=>{
 };
 $("btnLogout").onclick=async()=>{
   if(!await confirmModal({title:"다른 이름으로 시작", msg:"지금 이름으로 작성한 기록은 저장되어 있어요.\n로그인 화면으로 돌아갈까요?"})) return;
-  me=null; myNote={rnd:{},review:"",flow:{},placeNotes:{}};
+  me=null; myNote={review:"",flow:{},placeNotes:{}};
   try{ localStorage.removeItem("andongMe"); }catch(e){}
   $("topnav").classList.remove("on"); $("tabbar").classList.remove("on");
   document.querySelectorAll(".page").forEach(el=>el.classList.remove("on")); $("pgLogin").classList.add("on");
@@ -667,12 +688,12 @@ function renderSchedule(){
         <div class="pr">${esc(r.program)}</div>
         ${r.editedBy?`<div class="who">최근 수정 ${esc(r.editedBy)} · ${fmtTs(r.updatedAt)}</div>`:""}
       </div>
-      ${!isMove?`<button class="notebtn ${hasNote?"done":""}" data-a="note"><span class="i">${hasNote?"✓":"✍"}</span><span>${hasNote?"기록함":"내 기록"}</span><span class="s">${hasNote?"열어서 고치기":"남기기"}</span></button>`:""}
+      ${!isMove?`<button class="notebtn ${hasNote?"done":""}" data-a="note"><span class="i">${hasNote?"✓":"✍"}</span><span>${hasNote?"기록함":"내 기록"}</span><span class="s">${hasNote?"R&D 열기":"R&D 관점"}</span></button>`:""}
     </div>`;
   }).join("") || `<div class="empty-note">일정이 없습니다. 위의 + 일정 추가 버튼으로 만들어 주세요.</div>`;
   $("schList").querySelectorAll("button").forEach(b=>{
     const id=b.closest(".srow").dataset.id;
-    b.onclick=()=>({note:openPlaceNote, edit:openSchEdit, del:delSch}[b.dataset.a])(id);
+    b.onclick=()=>({note:(i)=>go("rnd",i), edit:openSchEdit, del:delSch}[b.dataset.a])(id);
   });
 }
 $("btnAddRowTop").onclick=()=>openSchEdit(null);
@@ -721,27 +742,6 @@ async function delSch(id){
   if(!ok) return;
   try{ await store.del("sch", id); toast("삭제했어요"); }catch(e){ toast("삭제 실패: "+(e.code||e.message)); }
 }
-function openPlaceNote(id){
-  const r=SCH[id]; if(!r) return;
-  const n = {...(myNote.placeNotes?.[id]||{})};
-  const wrap=document.createElement("div");
-  wrap.innerHTML = `<div class="mini" style="margin-bottom:4px">${esc(r.time)} · 나만의 기록이며, ①~⑤ 항목은 기록 화면에서 함께 볼 수 있어요.</div>` +
-    PLACE_NOTE_FIELDS.map(f=>`<label>${esc(f.nm)}</label><textarea data-k="${f.k}" placeholder="자유롭게 적어 주세요">${esc(n[f.k]||"")}</textarea>`).join("");
-  const m = openModal({
-    title:`${r.place} — 내 기록`, body:wrap,
-    onShow:(body)=>body.querySelectorAll("textarea").forEach(ta=>{ autoGrow(ta); ta.oninput=()=>autoGrow(ta); }),
-    buttons:[
-      {label:"취소", cls:"ghost", onClick:()=>closeModal(m)},
-      {label:"저장", cls:"grn", onClick: async()=>{
-        const v={}; wrap.querySelectorAll("textarea").forEach(ta=>v[ta.dataset.k]=ta.value.trim());
-        myNote.placeNotes ||= {}; myNote.placeNotes[id]=v;
-        try{ await saveMyNote({placeNotes:{[id]:v}}); closeModal(m); toast("기록을 저장했어요"); renderSchedule(); }
-        catch(e){ toast("저장 실패: "+(e.code||e.message)); }
-      }}
-    ]
-  });
-}
-
 /* ═══════════════ 트립의 흐름 ═══════════════ */
 const flowTimers={};
 function flowRows(){ return Object.values(FLOW).sort((a,b)=>(a.order||0)-(b.order||0)); }
@@ -802,30 +802,57 @@ async function delFlow(id){
   try{ await store.del("flow", id); toast("삭제했어요"); }catch(e){ toast("삭제 실패: "+(e.code||e.message)); }
 }
 
-/* ═══════════════ R&D 관점 ═══════════════ */
+/* ═══════════════ R&D 관점 (장소별) ═══════════════ */
 let rndTimer=null;
+function rndStops(){ return schRows().filter(r=>r.kind!=="move"); }
+function noteHas(pn){ return !!pn && Object.values(pn).some(v=>String(v||"").trim()); }
 function renderRnd(){
-  $("rndItems").innerHTML = RND_ITEMS.map(i=>`<div class="ritem card">
-      <div class="lb"><span class="no">${i.no}</span><span class="nm">${esc(i.nm)}</span></div>
-      <div class="hint">${esc(i.hint)}</div>
-      <textarea data-k="${i.k}" placeholder="현장에서 본 것, 떠오른 생각을 길이 제한 없이 적어 주세요">${esc(myNote.rnd?.[i.k]||"")}</textarea>
-    </div>`).join("") +
-    `<div class="ritem review card"><div class="lb"><span class="no">✎</span><span class="nm">종합 소감 · 감상</span></div>
-      <div class="hint">하루를 돌아보며 남기고 싶은 소감, 인상 깊었던 장면, 팀에 제안하고 싶은 것.</div>
-      <textarea data-k="review" placeholder="자유롭게 적어 주세요">${esc(myNote.review||"")}</textarea></div>`;
-  $("rndItems").querySelectorAll("textarea").forEach(ta=>{
-    autoGrow(ta);
-    ta.oninput=()=>{ autoGrow(ta); $("rndStat").textContent="입력 중…"; clearTimeout(rndTimer); rndTimer=setTimeout(saveRnd,1500); };
-  });
+  const stops=rndStops();
+  if(!rndSel || (rndSel!=="all" && !SCH[rndSel])) rndSel = stops[0]?.id || "all";
+  $("rndChips").innerHTML = stops.map((r,i)=>`<button data-id="${r.id}" class="${r.id===rndSel?"cur":""} ${noteHas(myNote.placeNotes?.[r.id])?"has":""}"><span class="n">${i+1}</span>${esc(r.place)}<span class="d"></span></button>`).join("") +
+    `<button data-id="all" class="all ${rndSel==="all"?"cur":""} ${(myNote.review||"").trim()?"has":""}">✎ 종합 소감<span class="d"></span></button>`;
+  $("rndChips").querySelectorAll("button").forEach(b=>b.onclick=()=>{ flushRnd(); rndSel=b.dataset.id; renderRnd(); window.scrollTo({top:0,behavior:"smooth"}); });
+  const curChip=$("rndChips").querySelector("button.cur"); if(curChip) curChip.scrollIntoView({inline:"center", block:"nearest"});
+  const panel=$("rndPanel");
+  const idx=stops.findIndex(r=>r.id===rndSel);
+  const prev=stops[idx-1], next=stops[idx+1];
+  if(rndSel==="all"){
+    panel.innerHTML=`<div class="rp-head"><div class="idx">✎</div><div><h3>종합 소감 · 감상</h3><div class="pr">하루를 돌아보며 남기고 싶은 소감, 인상 깊었던 장면, 팀에 제안하고 싶은 것.</div></div></div>
+      <div class="ritem review card"><textarea data-k="review" placeholder="자유롭게 적어 주세요">${esc(myNote.review||"")}</textarea></div>
+      <div class="rp-nav"><button data-go="${stops[stops.length-1]?.id||""}">← ${esc(stops[stops.length-1]?.place||"")}</button></div>`;
+  } else {
+    const r=SCH[rndSel]; const pn=myNote.placeNotes?.[rndSel]||{};
+    panel.innerHTML=`<div class="rp-head"><div class="idx">${idx+1}</div><div><h3>${esc(r.place)}</h3><div class="tm">${esc(r.time)}${r.dur?" · "+esc(r.dur):""}</div><div class="pr">${esc(r.program)}</div></div></div>`+
+      NOTE_FIELDS.map(i=>`<div class="ritem card"><div class="lb"><span class="no">${i.no}</span><span class="nm">${esc(i.nm)}</span></div><div class="hint">${esc(i.hint)}</div>
+        <textarea data-k="${i.k}" placeholder="이곳에서 본 것, 떠오른 생각을 자유롭게">${esc(pn[i.k]||"")}</textarea></div>`).join("")+
+      `<div class="rp-nav"><button data-go="${prev?.id||""}" ${prev?"":"disabled"}>← ${esc(prev?.place||"이전")}</button><button data-go="${next?next.id:"all"}">${next?esc(next.place):"종합 소감"} →</button></div>`+
+      renderOthers(rndSel);
+  }
+  panel.querySelectorAll("textarea").forEach(ta=>{ autoGrow(ta); ta.oninput=()=>{ autoGrow(ta); $("rndStat").textContent="입력 중…"; clearTimeout(rndTimer); rndTimer=setTimeout(saveRnd,1500); }; });
+  panel.querySelectorAll(".rp-nav button").forEach(b=>b.onclick=()=>{ if(!b.dataset.go) return; flushRnd(); rndSel=b.dataset.go; renderRnd(); window.scrollTo({top:0,behavior:"smooth"}); });
   $("rndStat").textContent = myNote.updatedAt ? "마지막 저장 "+fmtTs(myNote.updatedAt) : "";
 }
+function renderOthers(id){
+  const list=Object.entries(NOTES).filter(([pid,n])=>!(me&&pid===me.pid) && noteHas(n.placeNotes?.[id]));
+  return `<div class="others"><h4>함께 보기 <span class="c">${list.length?list.length+"명이 이 장소를 기록했어요":"다른 참가자 기록"}</span></h4>`+
+    (list.length? list.map(([pid,n])=>{ const pn=n.placeNotes[id];
+      return `<div class="oc"><div class="n">${esc(maskName(n.name))}</div>`+NOTE_FIELDS.filter(f=>String(pn[f.k]||"").trim()).map(f=>`<div class="k">${f.no} ${esc(f.nm)}</div><div class="v">${esc(pn[f.k])}</div>`).join("")+`</div>`; }).join("")
+    : `<div class="none">아직 이 장소를 기록한 참가자가 없어요. 첫 기록을 남겨 보세요.</div>`)+`</div>`;
+}
+// 현재 패널의 입력값을 상태에 반영 (저장은 saveRnd)
+function collectRnd(){
+  const panel=$("rndPanel"); if(!panel.querySelector("textarea")) return null;
+  if(rndSel==="all"){ const v=panel.querySelector('textarea[data-k="review"]').value; myNote.review=v; return {review:v}; }
+  const pn={}; panel.querySelectorAll("textarea").forEach(ta=>pn[ta.dataset.k]=ta.value);
+  myNote.placeNotes ||= {}; myNote.placeNotes[rndSel]=pn; return {placeNotes:{[rndSel]:pn}};
+}
+function flushRnd(){ if(rndTimer){ clearTimeout(rndTimer); rndTimer=null; const d=collectRnd(); if(d) saveMyNote(d).catch(()=>{}); } }
 async function saveRnd(){
-  clearTimeout(rndTimer);
-  const rnd={}; let review="";
-  $("rndItems").querySelectorAll("textarea").forEach(ta=>{ if(ta.dataset.k==="review") review=ta.value; else rnd[ta.dataset.k]=ta.value; });
-  myNote.rnd=rnd; myNote.review=review; myNote.updatedAt=Date.now();
+  clearTimeout(rndTimer); rndTimer=null;
+  const d=collectRnd(); if(!d) return;
+  myNote.updatedAt=Date.now();
   $("rndStat").textContent="저장 중…";
-  try{ await saveMyNote({rnd, review}); $("rndStat").textContent="저장됨 "+fmtTs(Date.now()); }
+  try{ await saveMyNote(d); $("rndStat").textContent="저장됨 "+fmtTs(Date.now()); const chip=$("rndChips").querySelector(`button[data-id="${rndSel}"]`); if(chip) chip.classList.toggle("has", rndSel==="all"?!!(myNote.review||"").trim():noteHas(myNote.placeNotes[rndSel])); }
   catch(e){ $("rndStat").textContent="저장 실패"; toast("저장 실패: "+(e.code||e.message)); }
 }
 $("btnRndSave").onclick=async()=>{ await saveRnd(); toast("저장했어요"); };
@@ -896,7 +923,7 @@ async function delPlace(id){
 let recView="person";
 document.querySelectorAll(".rtabs button").forEach(b=>b.onclick=()=>{ recView=b.dataset.v; document.querySelectorAll(".rtabs button").forEach(x=>x.classList.toggle("cur",x===b)); renderRecords(); });
 function noteHasContent(n){
-  return RND_ITEMS.some(i=>(n.rnd?.[i.k]||"").trim()) || (n.review||"").trim() || Object.values(n.flow||{}).some(v=>String(v||"").trim()) ||
+  return (n.review||"").trim() || Object.values(n.flow||{}).some(v=>String(v||"").trim()) ||
     Object.values(n.placeNotes||{}).some(pn=>Object.values(pn||{}).some(v=>String(v||"").trim()));
 }
 function tsNum(ts){ return ts?.toMillis ? ts.toMillis() : (typeof ts==="number"? ts : 0); }
@@ -905,11 +932,17 @@ function renderRecords(){
   if(!entries.length){ $("recList").innerHTML=`<div class="empty-note">아직 남긴 기록이 없어요.<br>R&D 관점이나 트립의 흐름에 첫 기록을 남겨 보세요.</div>`; return; }
   const nameOf=(pid,n)=> maskName(n.name||"");
   const fv=(v)=>String(v||"").trim();
+  const placeName=id=>SCH[id]?.place||"(삭제된 장소)";
   if(recView==="person"){
     $("recList").innerHTML = entries.map(([pid,n])=>{
       const nm=nameOf(pid,n), mine=me&&pid===me.pid;
       let f="";
-      RND_ITEMS.forEach(i=>{ const v=fv(n.rnd?.[i.k]); if(v) f+=`<div class="f"><div class="k">${i.no} ${esc(i.nm)}</div><div class="v">${esc(v)}</div></div>`; });
+      const pns=schRows().filter(r=>noteHas(n.placeNotes?.[r.id]));
+      const orphanP=Object.keys(n.placeNotes||{}).filter(id=>!SCH[id] && noteHas(n.placeNotes[id]));
+      [...pns.map(r=>r.id), ...orphanP].forEach(id=>{
+        const pn=n.placeNotes[id];
+        f+=`<div class="f"><div class="k">📍 ${esc(placeName(id))}</div>`+NOTE_FIELDS.filter(x=>fv(pn[x.k])).map(x=>`<div class="sub">${x.no} ${esc(x.nm)}</div><div class="v">${esc(pn[x.k])}</div>`).join("")+`</div>`;
+      });
       if(fv(n.review)) f+=`<div class="f"><div class="k">✎ 종합 소감 · 감상</div><div class="v">${esc(n.review)}</div></div>`;
       const flows=flowRows().filter(x=>fv(n.flow?.[x.id]));
       const orphan=Object.keys(n.flow||{}).filter(id=>!FLOW[id] && fv(n.flow[id]));
@@ -918,26 +951,19 @@ function renderRecords(){
           flows.map(x=>`<div class="sub">${esc(x.place)} · ${esc(x.question)}</div><div class="v">${esc(n.flow[x.id])}</div>`).join("")+
           orphan.map(id=>`<div class="sub">(삭제된 질문)</div><div class="v">${esc(n.flow[id])}</div>`).join("")+`</div>`;
       }
-      const pns=schRows().filter(r=>{ const pn=n.placeNotes?.[r.id]; return pn && Object.values(pn).some(v=>fv(v)); });
-      if(pns.length){
-        f+=`<div class="f"><div class="k grn">🗓 장소별 기록</div>`+pns.map(r=>{
-          const pn=n.placeNotes[r.id];
-          return `<div class="sub">${esc(r.place)}</div>`+PLACE_NOTE_FIELDS.filter(x=>fv(pn[x.k])).map(x=>`<div class="v"><span style="color:var(--sub);font-size:12.5px">${esc(x.nm)}</span><br>${esc(pn[x.k])}</div>`).join("");
-        }).join("")+`</div>`;
-      }
       return `<div class="rec card"><div class="who"><span class="av">${esc([...nm][0]||"?")}</span><span class="nm">${esc(nm)}</span>${mine?`<span class="me">나</span>`:""}<span class="ts">${fmtTs(n.updatedAt)}</span></div>${f}</div>`;
     }).join("");
   } else {
+    // 항목별: ①~⑤ 관점마다 (장소 · 사람) 순으로 모아보기 → 같은 관점의 아이디어를 한눈에
     let html="";
-    const block=(title, list)=>{ if(!list.length) return; html+=`<div class="rec-item"><div class="it">${title}</div>${list.map(([nm,v,mine])=>`<div class="one"><div class="n">${esc(nm)}${mine?' <span style="color:var(--ac)">· 나</span>':""}</div><div class="v">${esc(v)}</div></div>`).join("")}</div>`; };
-    RND_ITEMS.forEach(i=>block(`${i.no} ${esc(i.nm)}`, entries.filter(([p,n])=>fv(n.rnd?.[i.k])).map(([p,n])=>[nameOf(p,n), n.rnd[i.k], me&&p===me.pid])));
+    const block=(title, list)=>{ if(!list.length) return; html+=`<div class="rec-item"><div class="it">${title}</div>${list.map(([nm,v,mine,sub])=>`<div class="one"><div class="n">${sub?`<span style="color:var(--ac)">${esc(sub)}</span> · `:""}${esc(nm)}${mine?' <span style="color:var(--ac)">· 나</span>':""}</div><div class="v">${esc(v)}</div></div>`).join("")}</div>`; };
+    NOTE_FIELDS.forEach(i=>{
+      const list=[];
+      schRows().filter(r=>r.kind!=="move").forEach(r=>entries.forEach(([p,n])=>{ const v=fv(n.placeNotes?.[r.id]?.[i.k]); if(v) list.push([nameOf(p,n), v, me&&p===me.pid, r.place]); }));
+      block(`${i.no} ${esc(i.nm)}`, list);
+    });
     block("✎ 종합 소감 · 감상", entries.filter(([p,n])=>fv(n.review)).map(([p,n])=>[nameOf(p,n), n.review, me&&p===me.pid]));
     flowRows().forEach(x=>block(`🧭 ${esc(x.place)} — ${esc(x.question)}`, entries.filter(([p,n])=>fv(n.flow?.[x.id])).map(([p,n])=>[nameOf(p,n), n.flow[x.id], me&&p===me.pid])));
-    schRows().filter(r=>r.kind!=="move").forEach(r=>{
-      const list=[];
-      entries.forEach(([p,n])=>{ const pn=n.placeNotes?.[r.id]; if(!pn) return; const txt=PLACE_NOTE_FIELDS.filter(x=>fv(pn[x.k])).map(x=>`${x.nm}\n${pn[x.k]}`).join("\n\n"); if(txt) list.push([nameOf(p,n), txt, me&&p===me.pid]); });
-      block(`🗓 ${esc(r.place)}`, list);
-    });
     $("recList").innerHTML = html || `<div class="empty-note">아직 남긴 기록이 없어요.</div>`;
   }
 }
@@ -954,7 +980,7 @@ async function doStart(){
     const pid=await phonePid(phone);
     me={pid, name, phone:fmtPhone(phone)};
     const prev=await store.getNote(pid);
-    myNote = prev ? {rnd:prev.rnd||{}, review:prev.review||"", flow:prev.flow||{}, placeNotes:prev.placeNotes||{}, updatedAt:prev.updatedAt} : {rnd:{},review:"",flow:{},placeNotes:{}};
+    myNote = prev ? {review:prev.review||"", flow:prev.flow||{}, placeNotes:prev.placeNotes||{}, updatedAt:prev.updatedAt} : {review:"",flow:{},placeNotes:{}};
     store.set("notes", pid, {name:maskName(name), ...(prev?{}:{createdAt:now()})}).catch(()=>{});
     store.savePhone(pid, name, fmtPhone(phone)).catch(()=>{});
     try{ localStorage.setItem("andongMe", JSON.stringify(me)); }catch(e){}
@@ -968,10 +994,10 @@ $("inPhone").addEventListener("keydown",e=>{ if(e.key==="Enter") doStart(); });
 $("inName").addEventListener("keydown",e=>{ if(e.key==="Enter") $("inPhone").focus(); });
 
 function onData(k, m){
-  if(k==="sch"){ SCH=m; if(cur==="schedule") renderSchedule(); }
+  if(k==="sch"){ SCH=m; if(cur==="schedule") renderSchedule(); if(cur==="rnd" && !rndTimer) renderRnd(); }
   if(k==="flow"){ FLOW=m; if(cur==="flow") renderFlow(); }
   if(k==="places"){ PLACES=m; if(cur==="places") renderPlaces(); }
-  if(k==="notes"){ NOTES=m; if(cur==="records") renderRecords(); }
+  if(k==="notes"){ NOTES=m; if(cur==="records") renderRecords(); if(cur==="rnd" && rndSel!=="all" && !rndTimer){ const o=$("rndPanel").querySelector(".others"); if(o){ const tmp=document.createElement("div"); tmp.innerHTML=renderOthers(rndSel); o.replaceWith(tmp.firstElementChild); } } }
   if(cur==="home" && me) renderHome();
 }
 (async function boot(){
@@ -984,7 +1010,7 @@ function onData(k, m){
       $("inName").value=saved.name; $("inPhone").value=saved.phone||"";
       me=saved;
       const prev=await store.getNote(saved.pid);
-      myNote = prev ? {rnd:prev.rnd||{}, review:prev.review||"", flow:prev.flow||{}, placeNotes:prev.placeNotes||{}, updatedAt:prev.updatedAt} : {rnd:{},review:"",flow:{},placeNotes:{}};
+      myNote = prev ? {review:prev.review||"", flow:prev.flow||{}, placeNotes:prev.placeNotes||{}, updatedAt:prev.updatedAt} : {review:"",flow:{},placeNotes:{}};
       const h=(location.hash||"").slice(1);
       go(PAGES[h]?h:"home");
     }
