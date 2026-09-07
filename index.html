@@ -356,7 +356,7 @@ h2.t{font-family:'Nanum Myeongjo',serif;font-size:clamp(20px,4.6vw,26px);font-we
 <!-- ═══ 생각해보기 ═══ -->
 <section id="pgFlow" class="page">
   <div class="sec-head"><div><div class="eyebrow">Questions</div><h2 class="t">생각해보기 — 장소별로 이어지는 질문</h2></div><button class="btn sm" id="btnAddFlow">+ 질문 추가</button></div>
-  <p class="lead">각 장소를 단순 방문하는 것이 아니라, 질문이 이어지도록 구성했습니다. 답을 적는 곳은 따로 없어요. 장소에 가기 전에 한 번 읽고, 다녀오며 생각만 해 보세요.</p>
+  <p class="lead">각 장소를 단순 방문하는 것이 아니라, 질문이 이어지도록 구성했습니다. 답을 적는 곳은 따로 없어요. 장소에 가기 전에 한 번 읽고, 다녀오며 생각만 해 보세요. 질문은 누구나 더할 수 있고, 고치거나 지우는 건 관리자만 할 수 있습니다.</p>
   <div class="flow" id="flowList"></div>
 </section>
 
@@ -842,17 +842,18 @@ function renderFlow(){
     <div class="num">${i+1}</div>
     <div class="pl">${esc(f.place)}</div>
     <div class="q">${esc(f.question)}</div>
-    <div class="tools"><span class="sp"></span><button data-a="edit">질문 수정</button><button data-a="del">삭제</button></div>
+    ${isAdmin?`<div class="tools"><span class="sp"></span><button data-a="edit">질문 수정</button><button data-a="del">삭제</button></div>`:(f.addedBy?`<div class="muted" style="font-size:11.5px;margin-top:6px">추가 ${esc(f.addedBy)}</div>`:"")}
   </div>`).join("") || `<div class="empty-note">질문이 없습니다. + 질문 추가로 만들어 주세요.</div>`;
   $("flowList").querySelectorAll(".fstep").forEach(el=>{
     const id=el.dataset.id;
-    el.querySelector('[data-a="edit"]').onclick=()=>openFlowEdit(id);
-    el.querySelector('[data-a="del"]').onclick=()=>delFlow(id);
+    el.querySelector('[data-a="edit"]')?.addEventListener("click",()=>openFlowEdit(id));
+    el.querySelector('[data-a="del"]')?.addEventListener("click",()=>delFlow(id));
   });
 }
 $("btnAddFlow").onclick=()=>openFlowEdit(null);
 function openFlowEdit(id){
   const isNew=!id, f=isNew?{}:FLOW[id]; if(!f) return;
+  if(!isNew && !isAdmin){ toast("질문 수정은 관리자만 할 수 있어요"); return; }
   const wrap=document.createElement("div");
   wrap.innerHTML=`<label>장소</label><input class="f" id="ffPlace" value="${esc(f.place||"")}" placeholder="예: 예미정">
     <label>질문</label><textarea id="ffQ" placeholder="이 장소에서 던질 질문">${esc(f.question||"")}</textarea>`;
@@ -866,13 +867,14 @@ function openFlowEdit(id){
         const ok=await confirmModal({title:isNew?"질문 추가":"질문 수정", msg:isNew?"이 질문을 추가하시겠습니까?":"수정하시겠습니까?", sub:"모든 참가자에게 바로 반영됩니다."});
         if(!ok) return;
         const order = isNew ? (flowRows().slice(-1)[0]?.order||0)+10 : f.order;
-        try{ await store.set("flow", isNew?genId("f"):id, {place, question, order, editedBy:whoami(), updatedAt:now()}); closeModal(m); toast(isNew?"추가했어요":"수정했어요"); }
+        try{ await store.set("flow", isNew?genId("f"):id, isNew?{place, question, order, addedBy:whoami(), createdAt:now()}:{place, question, order, editedBy:whoami(), updatedAt:now()}); closeModal(m); toast(isNew?"추가했어요":"수정했어요"); }
         catch(e){ toast("저장 실패: "+(e.code||e.message)); }
       }}
     ]});
 }
 async function delFlow(id){
   const f=FLOW[id]; if(!f) return;
+  if(!isAdmin){ toast("질문 삭제는 관리자만 할 수 있어요"); return; }
   const ok=await confirmModal({title:"질문 삭제", msg:`'${f.place}' 질문을 삭제하시겠습니까?`, sub:"모든 참가자의 목록에서 사라집니다.", okLabel:"삭제", okCls:"danger"});
   if(!ok) return;
   try{ await store.del("flow", id); toast("삭제했어요"); }catch(e){ toast("삭제 실패: "+(e.code||e.message)); }
